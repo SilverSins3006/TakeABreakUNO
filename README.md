@@ -8,5 +8,5 @@ A web application that begins tracking activity as soon as the user opens the pr
 
 The application also includes a timer that tracks how long the user has been online since opening the program, as well as a counter that records how many challenges have been completed. This provides users with a visual representation of their screen time and encourages them to take regular breaks throughout the day. 
 
-React / Node.js
-Using python / JavaScript
+React / node.js
+Using JavaScript
