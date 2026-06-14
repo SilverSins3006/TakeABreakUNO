@@ -24,7 +24,7 @@ If you do not already have Node.js installed, install a recent version from:
 
 ```bash
 git clone https://github.com/SilverSins3006/TakeABreakUNO.git
-cd TakeABreakUNO
+cd TakeABreakUNO/client
 npm install
 ```
 
