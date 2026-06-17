@@ -1,121 +1,60 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
+import takeABreakLogo from './assets/takeabreak.svg'
+import unoLogoWhite from './assets/O-UNO_Type_Color_White.png'
+import unoLogoBlack from './assets/O-UNO_Type_Color_Black.png'
 import './App.css'
 
+// Placeholder UI based on initial wireframe - not final design
+// Dark/light mode toggle included for development convenience
+// Timer display is static for now - functionality comes in Milestone 1
+// Button clicks are not wired up yet
+
 function App() {
-  const [count, setCount] = useState(0)
+  const [dark, setDark] = useState(true)
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <div className={`container ${dark ? 'dark' : 'light'}`}>
 
-      <div className="ticks"></div>
+      <button className="theme-toggle" onClick={() => setDark(!dark)}>
+        {dark ? '☀️ Light Mode' : '🌙 Dark Mode'}
+      </button>
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+      <div className="logo-row">
+          <img src={takeABreakLogo} className="logo" alt="Take a Break logo" />
+        <h1>Take a Break</h1>
+      </div>
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+      <div className="timer-box">
+        <div className="timer-header">
+          <span className="timer-label">Timer</span>
+          <span className="timer-display">30:00</span>
+        </div>
+        <div className="status">Not Break Time</div>
+        <div className="button-row">
+          <button>Pause</button>
+          <button>Settings</button>
+        </div>
+        <div className="button-row">
+          <button>Log Out</button>
+        </div>
+      </div>
+
+      <div className="hint">
+        <p>Edit <code>src/App.jsx</code> and save to test HMR</p>
+      </div>
+      
+      <footer className="footer">
+        <a href="https://www.unomaha.edu/" target="_blank" rel="noreferrer">
+          <img 
+            src={dark ? unoLogoWhite : unoLogoBlack} 
+            alt="University of Nebraska Omaha" 
+            className="uno-logo" 
+          />
+        </a>
+        <p className="course">Built for CSCI 4830/8836</p>
+      </footer>
+
+    </div>
   )
 }
 
