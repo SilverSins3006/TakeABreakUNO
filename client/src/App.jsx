@@ -3,6 +3,7 @@ import takeABreakLogo from './assets/takeabreak.svg'
 import unoLogoWhite from './assets/O-UNO_Type_Color_White.png'
 import unoLogoBlack from './assets/O-UNO_Type_Color_Black.png'
 import './App.css'
+import Timer from './Timer'
 
 // Placeholder UI based on initial wireframe - not final design
 // Dark/light mode toggle included for development convenience
