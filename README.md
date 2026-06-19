@@ -61,3 +61,28 @@ Run these from the project root.
 - `npm run server` — start backend only
 - `cd client && npm run build` — build frontend for production
 - `cd client && npm run preview` — preview the production build
+
+## Release Notes
+
+### Code Milestone 1
+
+Currently working:
+
+- React + Vite frontend is set up and running.
+- Express + Node.js backend server is set up and running.
+- The project can be run locally with `npm run dev`.
+- The frontend runs at `http://localhost:5173`.
+- The backend runs at `http://localhost:3000`.
+- Initial TakeABreakUNO active page UI has been created.
+- The UI includes a timer display area, Pause button, Menu button, and Logout button.
+- Light and dark mode styling has been added.
+- TakeABreakUNO logo and UNO course footer have been added.
+- Theme colors were updated to match the current logo/design.
+- PostgreSQL database setup is connected through Neon using environment variables.
+- The project is connected to GitHub and can be updated using `git pull`.
+
+Still in progress:
+
+- Some buttons and UI elements may still be placeholder features.
+- Timer and challenge functionality may need additional integration.
+- More database routes, challenge logic, and user settings will be added in future milestones.
