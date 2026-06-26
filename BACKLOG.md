@@ -28,7 +28,7 @@ This file tracks our upcoming course deliverables, agile story point estimations
 | **Create basic backend URLs** | Set up empty target placeholder routes in Express (like `/api/settings`) | Danie | 3 | **Done** |
 | **Build Settings screen layout** | Code the `pages/settings.js` dropdown menus for time, difficulty, and type | Danie | 5 | **Done** |
 | **Link backend to database pool** | Write the code that safely bridges our Express server to our live Neon cloud database | Danie | 5 | **Done** |
-**Fix Vercel page refresh 404 error** | Create a `vercel.json` file to make sure refreshing a route loads the app safely | Danie | 3 | To Do |
+**Fix Vercel page refresh 404 error** | Create a `vercel.json` file to make sure refreshing a route loads the app safely | Danie | 3 | Done |
 | **Build database tables on Neon** | Write SQL commands to build the `challenges` and `settings` tables in our database | Tristan | 5 | To Do |
 | **Add baseline challenge data** | Insert our initial list of break challenges directly into our database table rows | Tristan | 3 | To Do |
 | **Code the 'Save Settings' backend API** | Write code so that when someone saves preferences, it updates the database | Open | 5 | To Do |
