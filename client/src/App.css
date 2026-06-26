@@ -13,6 +13,8 @@
   width: 100%;
   padding: 2rem;
   transition: background-color 0.3s, color 0.3s;
+  background-color: var(--bg);
+  font-family: sans-serif;
 }
 
 .dark {
@@ -33,11 +35,6 @@
   --hint: #1cb4b3;
 }
 
-.container {
-  background-color: var(--bg);
-  font-family: sans-serif;
-}
-
 .theme-toggle {
   align-self: flex-end;
   margin-bottom: 1rem;
@@ -48,6 +45,9 @@
   color: var(--text);
   cursor: pointer;
   font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .logo-row {
