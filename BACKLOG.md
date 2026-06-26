@@ -1,4 +1,4 @@
-# 📋 Project Task Tracker & Backlog
+# Project Task Tracker & Backlog
 
 This file tracks our upcoming course deliverables, agile story point estimations, and team card assignments.
 
