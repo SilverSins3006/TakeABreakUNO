@@ -1,0 +1,44 @@
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import Timer from '../components/Timer'
+import Footer from '../components/Footer';
+
+function Dashboard ({ dark, seconds, isRunning, setIsRunning, onOpenSettings }) {
+  const navigate = useNavigate();
+
+  const handleToggleTimer = () => {
+    setIsRunning(!isRunning);
+  };
+
+  return (
+    <div className="container">
+      <div className="card">
+        <div className="timer-header">
+          <span className="timer-label">Timer</span>
+          <span className="timer-display">
+            {/* CORRECTED: Passing the seconds state down to the presentation component */}
+            <Timer seconds={seconds} />
+          </span>
+        </div>
+        
+        <div className="status">
+          Not Break Time
+        </div>
+        
+        <div className="button-row">
+          <button className="btn-accent" onClick={handleToggleTimer}>
+            {isRunning ? "Pause" : "Start"}
+          </button>
+          <button onClick={onOpenSettings}>
+            Settings
+          </button>
+        </div>
+        <div className="button-row">
+          <button onClick={() => navigate('/account')}>Log_Out</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default Dashboard;

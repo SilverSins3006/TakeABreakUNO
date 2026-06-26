@@ -1,7 +1,7 @@
-function Stats() {
+function Insights() {
   return (
     <div>Stats Page Placeholder</div>
   )
 }
 
-export default Stats
+export default Insights

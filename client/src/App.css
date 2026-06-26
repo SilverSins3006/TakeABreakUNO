@@ -1,53 +1,93 @@
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+/* ============================================================
+   APP.CSS — Take a Break
+   Organized: Variables → Base → Layout → Components → Footer
+   ============================================================ */
+
+
+/* ============================================================
+   1. THEME VARIABLES
+   ============================================================ */
+
+/* Dark Mode (Low Contrast / Eye Friendly) */
+.dark {
+  --bg:           #0f1117;
+  --box-bg:       #1a1c24;
+  --accent:       #ff6b6b;
+  --accent-hover: #ff9e9e;
+  --btn-bg:       #252833;
+  --text:         #cbd5e1;
+  --hint:         #64748b;
+  --border:       #334155;
+  --grid-color:   rgba(255, 255, 255, 0.03);
+  --hard-shadow:  4px 4px 0px #000;
+  --lcd-bg:       #000000;
+  --lcd-text:     #f1f5f9;
+}
+
+/* Light Mode (Neutral / Clean) */
+.light {
+  --bg:           #f8fafc;
+  --box-bg:       #ffffff;
+  --accent:       #f43f5e;
+  --accent-hover: #be123c;
+  --btn-bg:       #f1f5f9;
+  --text:         #334155;
+  --hint:         #94a3b8;
+  --border:       #e2e8f0;
+  --grid-color:   rgba(0, 0, 0, 0.03);
+  --hard-shadow:  4px 4px 0px #e2e8f0;
+  --lcd-bg:       #e2e8f0;
+  --lcd-text:     #1e293b;
+}
+
+
+/* ============================================================
+   2. BASE / WRAPPER
+   ============================================================ */
+
+/* Grid background shared between wrapper and container */
+.app-wrapper,
+.container {
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(var(--grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.app-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .container {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  flex: 1;
+  padding: 2rem;
+  background-position: center center;
+  color: var(--text);
+  font-family: 'Orbitron', sans-serif;
+  letter-spacing: 1px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+
+/* ============================================================
+   3. HEADER
+   ============================================================ */
+
+.header {
+  padding: 1.5rem 2rem;
+  border-bottom: 2px solid var(--accent);
+  display: flex;
   justify-content: space-between;
   align-items: center;
-  min-height: 100vh;
-  width: 100%;
-  padding: 2rem;
-  transition: background-color 0.3s, color 0.3s;
-  background-color: var(--bg);
-  font-family: sans-serif;
-}
-
-.dark {
-  --bg: #0d1f1f;
-  --box-bg: #112626;
-  --accent: #fc704c;
-  --btn-bg: #1a3535;
-  --text: white;
-  --hint: #1cb4b3;
-}
-
-.light {
-  --bg: #f0f4f8;
-  --box-bg: #ffffff;
-  --accent: #fc704c;
-  --btn-bg: #dce8f5;
-  --text: #1a1a2e;
-  --hint: #1cb4b3;
-}
-
-.theme-toggle {
-  align-self: flex-end;
-  margin-bottom: 1rem;
-  padding: 0.4rem 0.8rem;
-  background: transparent;
-  border: 1px solid var(--accent);
-  border-radius: 4px;
-  color: var(--text);
-  cursor: pointer;
-  font-size: 0.85rem;
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  background: var(--bg);
 }
 
 .logo-row {
@@ -60,107 +100,251 @@
 
 .logo-row h1 {
   color: var(--text);
-  font-size: 1.8rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-family: 'Orbitron', sans-serif;
+  letter-spacing: 1px;
 }
 
 .logo {
-  height: 60px;
+  height: 40px;
 }
 
-.timer-box {
+
+/* ============================================================
+   4. THEME TOGGLE
+   ============================================================ */
+
+.theme-toggle {
+  align-self: flex-end;
+  margin-bottom: 1rem;
+  padding: 0.5rem 1rem;
+  background: var(--box-bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  cursor: pointer;
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 2px 2px 0px var(--border);
+  font-family: 'Orbitron', sans-serif;
+  text-transform: uppercase;
+  width: auto;
+}
+
+.theme-toggle:active {
+  transform: translate(2px, 2px);
+  box-shadow: 0px 0px 0px var(--border);
+}
+
+
+/* ============================================================
+   5. CARD
+   ============================================================ */
+
+.card {
   background-color: var(--box-bg);
-  border: 2px solid var(--accent);
-  border-radius: 8px;
-  padding: 2rem;
-  width: 300px;
+  border: 1px solid var(--border);
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 380px;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.5rem;
+  box-shadow: var(--hard-shadow);
 }
+
+.card h2 {
+  color: var(--text);
+  margin-bottom: 1rem;
+}
+
+/* ============================================================
+   6. TIMER
+   ============================================================ */
 
 .timer-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
 }
 
 .timer-label {
-  color: var(--accent);
-  font-size: 1.2rem;
-  font-weight: bold;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--hint);
+  font-family: 'Orbitron', sans-serif;
 }
 
+/* LCD Screen */
 .timer-display {
-  background-color: var(--btn-bg);
-  color: var(--text);
-  padding: 0.25rem 0.75rem;
-  border-radius: 4px;
-  font-size: 1.4rem;
-  font-weight: bold;
+  background-color: var(--lcd-bg);
+  color: var(--lcd-text);
+  padding: 1rem;
+  border: 1px solid var(--border);
+  font-family: 'VT323', monospace;
+  font-size: 4rem;
+  text-align: center;
+  line-height: 1;
+  letter-spacing: 2px;
 }
 
 .status {
   color: var(--text);
   text-align: center;
-  font-size: 1.1rem;
-  padding: 0.5rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 1rem;
+  padding: 1rem;
   background-color: var(--btn-bg);
-  border-radius: 4px;
+  border: 1px solid var(--border);
 }
 
-.button-row {
-  display: flex;
-  gap: 0.5rem;
-}
 
-.button-row button {
-  flex: 1;
-  padding: 0.5rem;
+/* ============================================================
+   7. BUTTONS
+   ============================================================ */
+
+button {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  font-size: 0.8rem;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: transform 0.1s;
+  box-shadow: var(--hard-shadow);
+  padding: 0.6rem;
   background-color: var(--btn-bg);
   color: var(--text);
-  border: 1px solid var(--accent);
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 1rem;
+  border: 1px solid var(--border);
+  width: 100%;
 }
 
-.button-row button:hover {
+button:hover {
+  background-color: var(--border);
+}
+
+button:active {
+  transform: translate(2px, 2px);
+  box-shadow: 0px 0px 0px var(--border);
+}
+
+/* --- Layout --- */
+.button-row {
+  display: flex;
+  gap: 0.75rem;
+}
+
+/* --- Accent override --- */
+.btn-accent {
   background-color: var(--accent);
-  color: white;
+  color: #fff;
+  border-color: var(--accent);
 }
 
-.hint {
-  margin-top: 1rem;
-  color: var(--hint);
-  font-size: 0.85rem;
-  text-align: center;
+.btn-accent:hover {
+  opacity: 0.9;
+  background-color: var(--accent-hover);
 }
 
-.hint code {
+
+/* ============================================================
+   8. LOGIN FORM
+   ============================================================ */
+
+.input-field {
   background-color: var(--btn-bg);
-  padding: 0.1rem 0.4rem;
-  border-radius: 4px;
-  color: var(--accent);
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 0.65rem 0.75rem;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 1px;
+  width: 100%;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.2s;
 }
+
+.input-field::placeholder {
+  color: var(--hint);
+  text-transform: uppercase;
+}
+
+.input-field:focus {
+  border-color: var(--accent);
+}
+
+.form-toggle {
+  margin-top: 1rem;
+  cursor: pointer;
+  font-size: 0.7rem;
+  color: var(--accent);
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-family: 'Orbitron', sans-serif;
+}
+
+.form-toggle:hover {
+  color: var(--accent-hover);
+}
+
+
+/* ============================================================
+   9. MODAL
+   ============================================================ */
+
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.setting-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+
+/* ============================================================
+   10. FOOTER
+   ============================================================ */
 
 .footer {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.4rem;
-  padding: 1.5rem 0 1rem;
-  border-top: 1px solid #1cb4b3;
-  width: 100%;
+  gap: 0.5rem;
+  padding: 1rem;
+  text-align: center;
+  border-top: 2px solid var(--accent);
   margin-top: auto;
 }
 
 .uno-logo {
-  height: 32px;
-  opacity: 0.85;
+  height: 28px;
+  opacity: 0.6;
 }
 
 .course {
   color: var(--hint);
-  font-size: 0.8rem;
-  margin: 0;
+  font-size: 0.7rem;
+  font-weight: bold;
+  text-transform: uppercase;
 }
