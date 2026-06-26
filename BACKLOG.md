@@ -35,7 +35,8 @@ This file tracks our upcoming course deliverables, agile story point estimations
 | **Code the 'Get Random Challenge' API** | Write a database search query that picks one random row from our challenge list | Open | 5 | To Do |
 | **Connect front end to challenge data** | Make our website text box actually fetch and display a live random challenge from the API | Open | 5 | To Do |
 | **Make completion counter functional** | Write logic to track and add +1 to the user's score box when a challenge is finished | Open | 3 | To Do |
-| **Set up on-screen popup alerts** | Make an emergency backup browser popup appear when a break interval hits zero | Open | 5 | To Do |
+| **Set up on-screen alerts** | When the timer hits zero, change the status label from "NOT BREAK TIME" to "BREAK TIME." | Open | 3 | To Do |
+| **Display break task and XP reward** | When the timer hits zero, show the assigned break task and XP gained for completing it. | Open | 3 | To Do |
 
 ---
 
