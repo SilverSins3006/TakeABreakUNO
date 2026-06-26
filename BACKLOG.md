@@ -7,7 +7,7 @@ This file tracks our upcoming course deliverables, agile story point estimations
 ### Code Milestone 1 — Due June 18 (Completed)
 *Objective: Build the core foundation of our app, get our servers running, and show the baseline user interface.*
 
-| Trello Card Title | What It Means In Plain English | Assignee | Points | Status |
+| Task | Description | Assignee | Points | Status |
 | :--- | :--- | :--- | :--- | :--- |
 | **Deploy React Frontend to Vercel** | Get our blank React website live on the web at https://take-a-break-uno.vercel.app | Tristan | 3 | **Done** |
 | **Deploy backend server setup** | Set up the backend node server code so it can talk to the internet | Danie / Tristan | 3 | **Done** |
@@ -21,7 +21,7 @@ This file tracks our upcoming course deliverables, agile story point estimations
 ### Code Milestone 2 — Due July 2 (Current Focus)
 *Objective: Connect our screens to our live backend database so settings save and random challenges appear.*
 
-| Trello Card Title | What It Means In Plain English | Assignee | Points | Status |
+| Task | Description | Assignee | Points | Status |
 | :--- | :--- | :--- | :--- | :--- |
 | **Clean up timer file structure** | Refactor the timer code out of one giant file and turn it into clean components | Danie | 5 | **Done** |
 | **Organize project workspace files** | Standardize where folders sit so frontend and backend don't get tangled | Danie | 3 | **Done** |
@@ -42,7 +42,7 @@ This file tracks our upcoming course deliverables, agile story point estimations
 ### Code Milestone 3 — Due July 16
 *Objective: Make sure the app keeps data safe when a browser refreshes and write automated tests.*
 
-| Trello Card Title | What It Means In Plain English | Assignee | Points | Status |
+| Task | Description | Assignee | Points | Status |
 | :--- | :--- | :--- | :--- | :--- |
 | **Keep settings saved on page refresh** | Code the app to pull user preferences from the database the moment they log back in | Open | 5 | To Do |
 | **Keep timer ticking on page refresh** | Use LocalStorage so refreshing the web page doesn't reset your timer to zero | Open | 5 | To Do |
@@ -57,7 +57,7 @@ This file tracks our upcoming course deliverables, agile story point estimations
 ### Code Milestone 4 — Due July 31
 *Objective: Polishing code comments, creating auto-generated documentation, and submitting final papers.*
 
-| Trello Card Title | What It Means In Plain English | Assignee | Points | Status |
+| Task | Description | Assignee | Points | Status |
 | :--- | :--- | :--- | :--- | :--- |
 | **Add code notes and clean files** | Write clear inline comments explaining how our functions work for grading clarity | All Team | 2 | To Do |
 | **Auto-generate JSDoc code site** | Run a tool that reads our code comments and instantly spins up a documentation site | Open | 3 | To Do |
