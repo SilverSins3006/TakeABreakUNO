@@ -3,43 +3,41 @@
    Organized: Variables → Base → Layout → Components → Footer
    ============================================================ */
 
-
 /* ============================================================
    1. THEME VARIABLES
    ============================================================ */
 
 /* Dark Mode (Low Contrast / Eye Friendly) */
 .dark {
-  --bg:           #0f1117;
-  --box-bg:       #1a1c24;
-  --accent:       #ff6b6b;
+  --bg: #0f1117;
+  --box-bg: #1a1c24;
+  --accent: #ff6b6b;
   --accent-hover: #ff9e9e;
-  --btn-bg:       #252833;
-  --text:         #cbd5e1;
-  --hint:         #64748b;
-  --border:       #334155;
-  --grid-color:   rgba(255, 255, 255, 0.03);
-  --hard-shadow:  4px 4px 0px #000;
-  --lcd-bg:       #000000;
-  --lcd-text:     #f1f5f9;
+  --btn-bg: #252833;
+  --text: #cbd5e1;
+  --hint: #64748b;
+  --border: #334155;
+  --grid-color: rgba(255, 255, 255, 0.03);
+  --hard-shadow: 4px 4px 0px #000;
+  --lcd-bg: #000000;
+  --lcd-text: #f1f5f9;
 }
 
 /* Light Mode (Neutral / Clean) */
 .light {
-  --bg:           #f8fafc;
-  --box-bg:       #ffffff;
-  --accent:       #f43f5e;
+  --bg: #f8fafc;
+  --box-bg: #ffffff;
+  --accent: #f43f5e;
   --accent-hover: #be123c;
-  --btn-bg:       #f1f5f9;
-  --text:         #334155;
-  --hint:         #94a3b8;
-  --border:       #e2e8f0;
-  --grid-color:   rgba(0, 0, 0, 0.03);
-  --hard-shadow:  4px 4px 0px #e2e8f0;
-  --lcd-bg:       #e2e8f0;
-  --lcd-text:     #1e293b;
+  --btn-bg: #f1f5f9;
+  --text: #334155;
+  --hint: #94a3b8;
+  --border: #e2e8f0;
+  --grid-color: rgba(0, 0, 0, 0.03);
+  --hard-shadow: 4px 4px 0px #e2e8f0;
+  --lcd-bg: #e2e8f0;
+  --lcd-text: #1e293b;
 }
-
 
 /* ============================================================
    2. BASE / WRAPPER
@@ -71,11 +69,12 @@
   padding: 2rem;
   background-position: center center;
   color: var(--text);
-  font-family: 'Orbitron', sans-serif;
+  font-family: "Orbitron", sans-serif;
   letter-spacing: 1px;
-  transition: background-color 0.3s, color 0.3s;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
 }
-
 
 /* ============================================================
    3. HEADER
@@ -103,14 +102,13 @@
   font-size: 1.5rem;
   font-weight: 700;
   text-transform: uppercase;
-  font-family: 'Orbitron', sans-serif;
+  font-family: "Orbitron", sans-serif;
   letter-spacing: 1px;
 }
 
 .logo {
   height: 40px;
 }
-
 
 /* ============================================================
    4. THEME TOGGLE
@@ -129,7 +127,7 @@
   align-items: center;
   gap: 8px;
   box-shadow: 2px 2px 0px var(--border);
-  font-family: 'Orbitron', sans-serif;
+  font-family: "Orbitron", sans-serif;
   text-transform: uppercase;
   width: auto;
 }
@@ -138,7 +136,6 @@
   transform: translate(2px, 2px);
   box-shadow: 0px 0px 0px var(--border);
 }
-
 
 /* ============================================================
    5. CARD
@@ -159,6 +156,7 @@
 .card h2 {
   color: var(--text);
   margin-bottom: 1rem;
+  font-family: "Orbitron", sans-serif;
 }
 
 /* ============================================================
@@ -178,7 +176,7 @@
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--hint);
-  font-family: 'Orbitron', sans-serif;
+  font-family: "Orbitron", sans-serif;
 }
 
 /* LCD Screen */
@@ -187,7 +185,7 @@
   color: var(--lcd-text);
   padding: 1rem;
   border: 1px solid var(--border);
-  font-family: 'VT323', monospace;
+  font-family: "VT323", monospace;
   font-size: 4rem;
   text-align: center;
   line-height: 1;
@@ -205,13 +203,12 @@
   border: 1px solid var(--border);
 }
 
-
 /* ============================================================
    7. BUTTONS
    ============================================================ */
 
 button {
-  font-family: 'Orbitron', sans-serif;
+  font-family: "Orbitron", sans-serif;
   font-weight: 700;
   font-size: 0.8rem;
   cursor: pointer;
@@ -253,7 +250,6 @@ button:active {
   background-color: var(--accent-hover);
 }
 
-
 /* ============================================================
    8. LOGIN FORM
    ============================================================ */
@@ -263,7 +259,7 @@ button:active {
   color: var(--text);
   border: 1px solid var(--border);
   padding: 0.65rem 0.75rem;
-  font-family: 'Orbitron', sans-serif;
+  font-family: "Orbitron", sans-serif;
   font-size: 0.75rem;
   letter-spacing: 1px;
   width: 100%;
@@ -289,13 +285,12 @@ button:active {
   text-align: center;
   text-transform: uppercase;
   letter-spacing: 1px;
-  font-family: 'Orbitron', sans-serif;
+  font-family: "Orbitron", sans-serif;
 }
 
 .form-toggle:hover {
   color: var(--accent-hover);
 }
-
 
 /* ============================================================
    9. MODAL
@@ -320,7 +315,6 @@ button:active {
   gap: 0.5rem;
   margin-bottom: 1.5rem;
 }
-
 
 /* ============================================================
    10. FOOTER
@@ -347,4 +341,91 @@ button:active {
   font-size: 0.7rem;
   font-weight: bold;
   text-transform: uppercase;
+}
+
+/* ============================================================
+   11. SETTINGS
+   ============================================================ */
+
+label {
+  font-size: 0.75rem;
+  color: var(--text);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-family: "Orbitron", sans-serif;
+  margin-bottom: 0.25rem;
+  display: block;
+}
+
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  background: transparent;
+  cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  height: 8px;
+  background: var(--hint);
+  border-radius: 0;
+}
+
+input[type="range"]::-moz-range-track {
+  height: 8px;
+  background: var(--hint);
+  border-radius: 0;
+}
+
+input[type="range"]::-ms-track {
+  height: 8px;
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+
+  width: 18px;
+  height: 18px;
+  background: var(--accent);
+  border: 2px solid #000;
+  border-radius: 0;
+  margin-top: -5px;
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  background: var(--accent);
+  border: 2px solid #000;
+  border-radius: 0;
+}
+
+input[type="range"]::-ms-thumb {
+  width: 18px;
+  height: 18px;
+  background: var(--accent);
+  border: 2px solid #000;
+  border-radius: 0;
+}
+
+select {
+  background-color: var(--btn-bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  padding: 0.5rem;
+  font-family: "Orbitron", sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 1px;
+  width: 100%;
+  box-sizing: border-box;
+  outline: none;
+}
+
+select[multiple] option {
+  padding: 8px 12px;
+  line-height: 1.8;
 }

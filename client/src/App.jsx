@@ -1,11 +1,16 @@
-import { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Account from './pages/Account';
-import Settings from './pages/Settings';
-import Dashboard from './pages/Dashboard';
-import Insights from './pages/Insights';
-import Header from './components/Header';
-import Footer from './components/Footer';
+import { useState, useEffect } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import Account from "./pages/Account";
+import Settings from "./pages/Settings";
+import Dashboard from "./pages/Dashboard";
+import Insights from "./pages/Insights";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
 
 /* ROADMAP: CURRENT FOCUS - MILESTONE 2 (Core Challenge + Settings) */
 
@@ -38,34 +43,49 @@ function App() {
     <div className={`app-wrapper ${dark ? "dark" : "light"}`}>
       <Router>
         <Header dark={dark} setDark={setDark} />
-        
+
         <Routes>
-          <Route path="/" element={
-             !hasConfigured ? <Navigate to="/settings" replace /> : <Navigate to="/dashboard" replace />
-          } />
-          
+          <Route
+            path="/"
+            element={
+              !hasConfigured ? (
+                <Navigate to="/settings" replace />
+              ) : (
+                <Navigate to="/dashboard" replace />
+              )
+            }
+          />
+
           {/* Pages receive 'dark' prop for footer consistency */}
           <Route path="/account" element={<Account dark={dark} />} />
-          <Route path="/settings" element={<Settings />} />
+          <Route
+            path="/settings"
+            element={<Settings seconds={seconds} setSeconds={setSeconds} />}
+          />
           <Route path="/insights" element={<Insights dark={dark} />} />
-          <Route path="/dashboard" element={
-            <Dashboard 
-              dark={dark}
-              seconds={seconds} 
-              isRunning={isRunning} 
-              setIsRunning={setIsRunning} 
-              onOpenSettings={() => setShowSettingsModal(true)} 
-            />
-          } />
+          <Route
+            path="/dashboard"
+            element={
+              <Dashboard
+                dark={dark}
+                seconds={seconds}
+                isRunning={isRunning}
+                setIsRunning={setIsRunning}
+                onOpenSettings={() => setShowSettingsModal(true)}
+              />
+            }
+          />
           <Route path="*" element={<Navigate to="/account" replace />} />
         </Routes>
 
         <Footer dark={dark} />
 
         {showSettingsModal && (
-          <Settings 
-            isModal={true} 
-            onClose={() => setShowSettingsModal(false)} 
+          <Settings
+            seconds={seconds}
+            setSeconds={setSeconds}
+            isModal={true}
+            onClose={() => setShowSettingsModal(false)}
             onSave={() => {
               setHasConfigured(true);
               setShowSettingsModal(false);
