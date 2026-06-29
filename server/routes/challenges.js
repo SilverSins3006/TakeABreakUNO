@@ -2,12 +2,6 @@ const express = require('express');
 const router = express.Router();
 const db = require('../config/db');
 
-// GET /api/challenges/test
-router.get('/test', (req, res) => {
-  res.json({ message: 'Challenges route is working!' });
-});
-
-// Maps frontend category values to database category names
 const categoryMap = {
   exercise: 'Exercise',
   stretch: 'Stretch',
@@ -20,12 +14,6 @@ const categoryMap = {
   'get-outside': 'Get Outside',
 };
 
-// GET /api/challenges
-// Examples:
-// /api/challenges
-// /api/challenges?difficulty=Easy
-// /api/challenges?category=Exercise
-// /api/challenges?difficulty=Easy&category=Exercise
 router.get('/', async (req, res) => {
   try {
     const { difficulty, category } = req.query;
@@ -59,12 +47,6 @@ router.get('/', async (req, res) => {
   }
 });
 
-// GET /api/challenges/random
-// Examples:
-// /api/challenges/random
-// /api/challenges/random?difficulty=Easy
-// /api/challenges/random?category=Exercise
-// /api/challenges/random?difficulty=Easy&category=Exercise
 router.get('/random', async (req, res) => {
   try {
     const { difficulty, category } = req.query;
