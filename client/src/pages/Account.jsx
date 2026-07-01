@@ -1,37 +1,51 @@
-import { useState } from 'react';
-
-/* ROADMAP: CURRENT FOCUS - MILESTONE 2 (Core Challenge + Settings) */
-
-// TODO [WBS-1.0] [Phase: M2] - Integrate API call to Express /auth/login or /auth/signup
-// TODO [WBS-1.0] [Phase: M2] - Implement JWT/Session handling after successful authentication
-// TODO [WBS-1.2] [Phase: M2] - Add form validation (email format, password length)
+import { useEffect } from 'react';
+import { useAuth0 } from '@auth0/auth0-react';
+import { useNavigate } from 'react-router-dom';
 
 export default function Account() {
-  const [isLogin, setIsLogin] = useState(true);
+  const { isAuthenticated, loginWithRedirect, isLoading } = useAuth0();
+  const navigate = useNavigate();
+
+  // If already authenticated, redirect them away from the login page automatically
+  useEffect(() => {
+    if (!isLoading && isAuthenticated) {
+      navigate('/dashboard');
+    }
+  }, [isAuthenticated, isLoading, navigate]);
+
+  if (isLoading) {
+    return (
+      <div className="container">
+        <div className="card"><h2>Loading...</h2></div>
+      </div>
+    );
+  }
 
   return (
-   <div className="container">
-  <div className="card">
-    <h2>
-      {isLogin ? "Welcome Back" : "Create Account"}
-    </h2>
+    <div className="container">
+      <div className="card">
+        <h2>Welcome to Challenge App</h2>
+        <p style={{ margin: '1rem 0', color: '#666' }}>
+          Please log in or create an account to track your core challenges and settings.
+        </p>
 
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-      <input type="email" placeholder="Email" className="input-field" />
-      <input type="password" placeholder="Password" className="input-field" />
-      {!isLogin && (
-        <input type="password" placeholder="Confirm Password" className="input-field" />
-      )}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1.5rem' }}>
+          <button 
+            className="btn-accent" 
+            onClick={() => loginWithRedirect()}
+          >
+            Log In
+          </button>
+          
+          <button 
+            className="btn-accent" 
+            style={{ backgroundColor: 'transparent', border: '1px solid currentColor' }}
+            onClick={() => loginWithRedirect({ authorizationParams: { screen_hint: 'signup' } })}
+          >
+            Sign Up
+          </button>
+        </div>
+      </div>
     </div>
-
-    <button className="btn-accent" style={{ marginTop: '1.5rem' }}>
-      {isLogin ? "Log_In" : "Sign_Up"}
-    </button>
-
-    <p className="form-toggle" onClick={() => setIsLogin(!isLogin)}>
-      {isLogin ? "Need an account? Sign up." : "Already have an account? Log in."}
-    </p>
-  </div>
-</div>
   );
 }
