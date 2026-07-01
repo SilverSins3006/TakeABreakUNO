@@ -30,9 +30,9 @@ This file tracks our upcoming course deliverables, agile story point estimations
 | **Link backend to database pool** | Write the code that safely bridges our Express server to our live Neon cloud database | Danie | 5 | **Done** |
 | **Fix Vercel page refresh 404 error** | Create a `vercel.json` file to make sure refreshing a route loads the app safely | Danie | 3 | **Done** |
 | **Build database tables on Neon** | Write SQL commands to build the `challenges` and `settings` tables in our database | Tristan | 5 | **Done** |
-| **Add baseline challenge data** | Insert our initial list of break challenges directly into our database table rows | Tristan | 3 | To Do |
+| **Add baseline challenge data** | Insert our initial list of break challenges directly into our database table rows | Tristan | 3 | **Done** |
 | **Code the 'Save Settings' backend API** | Write code so that when someone saves preferences, it updates the database | Open | 5 | To Do |
-| **Code the 'Get Random Challenge' API** | Write a database search query that picks one random row from our challenge list | Open | 5 | To Do |
+| **Code the 'Get Random Challenge' API** | Write a database search query that picks one random row from our challenge list | Micheal | 5 | **Done** |
 | **Connect front end to challenge data** | Make our website text box actually fetch and display a live random challenge from the API | Open | 5 | To Do |
 | **Make completion counter functional** | Write logic to track and add +1 to the user's score box when a challenge is finished | Open | 3 | To Do |
 | **Set up on-screen alerts** | When the timer hits zero, change the status label from "NOT BREAK TIME" to "BREAK TIME." | Open | 3 | To Do |
