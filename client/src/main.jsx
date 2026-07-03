@@ -5,10 +5,13 @@ import App from './App.jsx'
 import './App.css'
 import { Auth0Provider } from "@auth0/auth0-react"
 
+// DIAGNOSTIC LOG: This will print your variables to the browser console so we can see what's missing
+console.log("Vite Env Check:", import.meta.env);
+
 createRoot(document.getElementById('root')).render(
    <StrictMode>
     <Auth0Provider
-      domain={import.meta.env.VITE_AUTH0_DOMAIN}
+      domain={import.meta.env.VITE_AUTH0_DOMAIN || "FALLBACK_NOT_FOUND"}
       clientId={import.meta.env.VITE_AUTH0_CLIENT_ID}
       authorizationParams={{ redirect_uri: window.location.origin }}
     >
