@@ -1,9 +1,10 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import Timer from '../components/Timer'
-import Footer from '../components/Footer';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Timer from "../components/Timer";
+import Footer from "../components/Footer";
+import Status from "../components/Status";
 
-function Dashboard ({ dark, seconds, isRunning, setIsRunning, onOpenSettings }) {
+function Dashboard({ dark, seconds, isRunning, setIsRunning, onOpenSettings }) {
   const navigate = useNavigate();
 
   const handleToggleTimer = () => {
@@ -20,21 +21,19 @@ function Dashboard ({ dark, seconds, isRunning, setIsRunning, onOpenSettings }) 
             <Timer seconds={seconds} />
           </span>
         </div>
-        
+
         <div className="status">
-          Not Break Time
+          <Status isBreakTime={seconds === 0} />
         </div>
-        
+
         <div className="button-row">
           <button className="btn-accent" onClick={handleToggleTimer}>
             {isRunning ? "Pause" : "Start"}
           </button>
-          <button onClick={onOpenSettings}>
-            Settings
-          </button>
+          <button onClick={onOpenSettings}>Settings</button>
         </div>
         <div className="button-row">
-          <button onClick={() => navigate('/account')}>Log_Out</button>
+          <button onClick={() => navigate("/account")}>Log_Out</button>
         </div>
       </div>
     </div>
