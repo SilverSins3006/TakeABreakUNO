@@ -6,6 +6,7 @@ export default function Settings({
   onSave,
   seconds,
   setSeconds,
+  setSessionLength,
 }) {
   const [sessionTime, setSessionTime] = useState(seconds / 60);
 
@@ -23,7 +24,9 @@ export default function Settings({
 
   const handleSave = (e) => {
     e.preventDefault();
-    setSeconds(sessionTime * 60);
+    const nextSeconds = sessionTime * 60;
+    setSeconds(nextSeconds);
+    setSessionLength(nextSeconds);
     if (onSave) onSave();
   };
 
