@@ -16,21 +16,29 @@ import { useAuth0 } from "@auth0/auth0-react";
 // Custom wrapper to protect routes from unauthenticated users
 function ProtectedRoute({ children }) {
   const { isAuthenticated, isLoading } = useAuth0();
-  
+
   if (isLoading) {
-    return <div className="container" style={{ padding: "2rem", textAlign: "center" }}>Checking authentication...</div>;
+    return (
+      <div
+        className="container"
+        style={{ padding: "2rem", textAlign: "center" }}
+      >
+        Checking authentication...
+      </div>
+    );
   }
-  
+
   return isAuthenticated ? children : <Navigate to="/account" replace />;
 }
 
 function App() {
   const [seconds, setSeconds] = useState(1800);
+  const [sessionLength, setSessionLength] = useState(1800);
   const [isRunning, setIsRunning] = useState(false);
   const [dark, setDark] = useState(true); // Global theme state
   const [hasConfigured, setHasConfigured] = useState(true);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
-  
+
   const { isLoading, error } = useAuth0();
 
   // Timer side-effect logic (moved safely away from early returns)
@@ -41,18 +49,26 @@ function App() {
         setSeconds((prev) => prev - 1);
       }, 1000);
     }
-    if (seconds === 0) {
-      setIsRunning(false);
-    }
     return () => clearInterval(interval);
   }, [isRunning, seconds]);
 
   if (isLoading) {
-    return <div className="container" style={{ padding: "2rem", textAlign: "center" }}>Initializing application...</div>;
+    return (
+      <div
+        className="container"
+        style={{ padding: "2rem", textAlign: "center" }}
+      >
+        Initializing application...
+      </div>
+    );
   }
 
   if (error) {
-    return <div className="container" style={{ padding: "2rem", color: "red" }}>Authentication Error: {error.message}</div>;
+    return (
+      <div className="container" style={{ padding: "2rem", color: "red" }}>
+        Authentication Error: {error.message}
+      </div>
+    );
   }
 
   return (
@@ -74,26 +90,30 @@ function App() {
 
           {/* Public authentication landing page */}
           <Route path="/account" element={<Account dark={dark} />} />
-          
+
           {/* Protected Routes - Wrapping these ensures users must log in first */}
           <Route
             path="/settings"
             element={
               <ProtectedRoute>
-                <Settings seconds={seconds} setSeconds={setSeconds} />
+                <Settings
+                  seconds={seconds}
+                  setSeconds={setSeconds}
+                  setSessionLength={setSessionLength}
+                />
               </ProtectedRoute>
             }
           />
-          
-          <Route 
-            path="/insights" 
+
+          <Route
+            path="/insights"
             element={
               <ProtectedRoute>
                 <Insights dark={dark} />
               </ProtectedRoute>
-            } 
+            }
           />
-          
+
           <Route
             path="/dashboard"
             element={
@@ -101,14 +121,17 @@ function App() {
                 <Dashboard
                   dark={dark}
                   seconds={seconds}
+                  time={seconds}
                   isRunning={isRunning}
                   setIsRunning={setIsRunning}
+                  setSeconds={setSeconds}
+                  sessionLength={sessionLength}
                   onOpenSettings={() => setShowSettingsModal(true)}
                 />
               </ProtectedRoute>
             }
           />
-          
+
           <Route path="*" element={<Navigate to="/account" replace />} />
         </Routes>
 
@@ -118,6 +141,7 @@ function App() {
           <Settings
             seconds={seconds}
             setSeconds={setSeconds}
+            setSessionLength={setSessionLength}
             isModal={true}
             onClose={() => setShowSettingsModal(false)}
             onSave={() => {

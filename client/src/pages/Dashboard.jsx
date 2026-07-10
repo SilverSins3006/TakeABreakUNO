@@ -1,13 +1,29 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Timer from "../components/Timer";
-import Footer from "../components/Footer";
 import Status from "../components/Status";
 
-function Dashboard({ dark, seconds, isRunning, setIsRunning, onOpenSettings }) {
+function Dashboard({
+  seconds,
+  isRunning,
+  setIsRunning,
+  setSeconds,
+  sessionLength,
+  onOpenSettings,
+}) {
   const navigate = useNavigate();
 
+  const handleReset = () => {
+    setSeconds(sessionLength);
+    setIsRunning(false);
+  };
+
   const handleToggleTimer = () => {
+    if (seconds === 0) {
+      setSeconds(sessionLength);
+      setIsRunning(true);
+      return;
+    }
+
     setIsRunning(!isRunning);
   };
 
@@ -28,8 +44,9 @@ function Dashboard({ dark, seconds, isRunning, setIsRunning, onOpenSettings }) {
 
         <div className="button-row">
           <button className="btn-accent" onClick={handleToggleTimer}>
-            {isRunning ? "Pause" : "Start"}
+            {seconds === 0 ? "Restart" : isRunning ? "Pause" : "Start"}
           </button>
+          <button onClick={handleReset}>Reset</button>
           <button onClick={onOpenSettings}>Settings</button>
         </div>
         <div className="button-row">
