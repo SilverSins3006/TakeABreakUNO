@@ -3,6 +3,7 @@
 A web application to encourage taking breaks from screen time.
 
 ## 🗺️ Navigation
+
 - [Team](#team)
 - [About](#about)
 - [Tech Stack](#tech-stack)
@@ -72,6 +73,7 @@ Run these from the project root.
 - `npm run server` — start backend only
 - `cd client && npm run build` — build frontend for production
 - `cd client && npm run preview` — preview the production build
+- `doxygen Doxyfile` - generate documentation which can then be viewed at /docs/html/index.html
 
 ## Release Notes
 

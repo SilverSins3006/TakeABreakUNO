@@ -1,5 +1,9 @@
 import { useState } from "react";
 
+/**
+ * @file Settings component.
+ * @brief Renders session and challenge preference controls.
+ */
 export default function Settings({
   isModal = false,
   onClose,
@@ -22,6 +26,10 @@ export default function Settings({
     return `${minutes} min`;
   };
 
+  /**
+   * @brief Save the current preferences.
+   * @param {Event} e Form submission event.
+   */
   const handleSave = (e) => {
     e.preventDefault();
     const nextSeconds = sessionTime * 60;

@@ -1,9 +1,22 @@
+/**
+ * @file Server entry point for the Take A Break backend.
+ * @brief Starts the Express app, verifies the database connection, and registers API routes.
+ */
 const express = require('express');
+
+/** Express application instance for the backend server. */
 const app = express();
+
+/** Default port used by the server. */
 const PORT = 3000;
 
+/** Database helper module for executing SQL queries. */
 const db = require('./config/db');
+
+/** Router for settings-related API endpoints. */
 const settingsRouter = require('./routes/settings');
+
+/** Router for challenge-related API endpoints. */
 const challengeRouter = require('./routes/challenges');
 
 // DATABASE CONNECTION TEST

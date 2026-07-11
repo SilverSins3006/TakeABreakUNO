@@ -1,3 +1,7 @@
+/**
+ * @file React application bootstrap.
+ * @brief Sets up the Auth0 provider and renders the root application.
+ */
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
