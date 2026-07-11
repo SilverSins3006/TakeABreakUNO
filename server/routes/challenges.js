@@ -1,7 +1,15 @@
+/**
+ * @file Challenges route module.
+ * @brief Provides endpoints for retrieving challenge data and category normalization.
+ */
 const express = require('express');
 const router = express.Router();
 const db = require('../config/db');
 
+/**
+ * @brief Maps category aliases to normalized challenge categories.
+ * @type {Object<string,string>}
+ */
 const categoryMap = {
   exercise: 'Exercise',
   stretch: 'Stretch',
@@ -14,7 +22,14 @@ const categoryMap = {
   'get-outside': 'Get Outside',
 };
 
-// Get a single random challenge
+/**
+ * @brief Get a single random challenge.
+ * @route GET /api/challenges/random
+ * @param {Object} req Express request object.
+ * @param {string} [req.query.difficulty] Optional difficulty filter.
+ * @param {string} [req.query.category] Optional category filter.
+ * @param {Object} res Express response object.
+ */
 router.get('/random', async (req, res) => {
   try {
     // Force the browser and Vercel edge network to skip caching this request
@@ -60,7 +75,14 @@ router.get('/random', async (req, res) => {
   }
 });
 
-// 2. Get all/filtered challenges list
+/**
+ * @brief Get all challenges, optionally filtered by difficulty or category.
+ * @route GET /api/challenges
+ * @param {Object} req Express request object.
+ * @param {string} [req.query.difficulty] Optional difficulty filter.
+ * @param {string} [req.query.category] Optional category filter.
+ * @param {Object} res Express response object.
+ */
 router.get('/', async (req, res) => {
   try {
     const { difficulty, category } = req.query;

@@ -1,3 +1,7 @@
+/**
+ * @file Main application shell for Take A Break.
+ * @brief Configures routing, authentication guards, and global UI state.
+ */
 import { useState, useEffect } from "react";
 import {
   BrowserRouter as Router,
@@ -13,7 +17,11 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import { useAuth0 } from "@auth0/auth0-react";
 
-// Custom wrapper to protect routes from unauthenticated users
+/**
+ * @brief Custom wrapper to protect routes from unauthenticated users.
+ * @param {Object} props Component props containing children.
+ * @param {React.ReactNode} props.children Child components to render when authenticated.
+ */
 function ProtectedRoute({ children }) {
   const { isAuthenticated, isLoading } = useAuth0();
 
@@ -31,6 +39,10 @@ function ProtectedRoute({ children }) {
   return isAuthenticated ? children : <Navigate to="/account" replace />;
 }
 
+/**
+ * @brief Root application component.
+ * @returns {JSX.Element} The application layout and route structure.
+ */
 function App() {
   const [seconds, setSeconds] = useState(1800);
   const [sessionLength, setSessionLength] = useState(1800);
