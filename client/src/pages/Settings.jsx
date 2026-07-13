@@ -13,6 +13,7 @@ export default function Settings({
   setSessionLength,
 }) {
   const [sessionTime, setSessionTime] = useState(seconds / 60);
+  const [categories, setCategories] = useState([]);
 
   const formatSessionTime = (minutes) => {
     if (minutes >= 60) {
@@ -75,16 +76,32 @@ export default function Settings({
         </select>
       </div>
 
-      <div>
-        <label htmlFor="categories">Challenge Categories</label>
-        <select className="select" id="categories" name="categories" multiple>
-          <option value="hunt">Scavenger Hunt</option>
-          <option value="brain">Brain Teaser</option>
-          <option value="outside">Get Outside</option>
-          <option value="exercise">Exercise</option>
-          <option value="stretch">Stretch</option>
-        </select>
-      </div>
+      {/* Handling multiple selection for challenge categories */}
+<div>
+  <label htmlFor="categories">Challenge Categories</label>
+
+  <select
+    className="select"
+    id="categories"
+    name="categories"
+    multiple
+    value={categories}
+    onChange={(e) => {
+      const selectedCategories = Array.from(
+        e.target.selectedOptions,
+        (option) => option.value
+      );
+
+      setCategories(selectedCategories);
+    }}
+  >
+    <option value="hunt">Scavenger Hunt</option>
+    <option value="brain">Brain Teaser</option>
+    <option value="outside">Get Outside</option>
+    <option value="exercise">Exercise</option>
+    <option value="stretch">Stretch</option>
+  </select>
+</div>
 
       <div className="button-row">
         <button type="submit" className="btn-accent">
