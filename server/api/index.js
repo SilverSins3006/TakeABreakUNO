@@ -6,6 +6,7 @@ const app = express();
 const db = require('../config/db');
 const settingsRouter = require('../routes/settings');
 const challengeRouter = require('../routes/challenges');
+const usersRouter = require('../routes/users');
 
 // need cors since this is the one Vercel actually deploys
 app.use(cors());
@@ -30,6 +31,7 @@ app.get('/api', (req, res) => {
 
 app.use('/api/challenges', challengeRouter);
 app.use('/api/settings', settingsRouter);
+app.use('/api/users', usersRouter);
 
 // only spin up a listener locally, Vercel calls the exported app directly
 if (process.env.NODE_ENV !== 'production') {
