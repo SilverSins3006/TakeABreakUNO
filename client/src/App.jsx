@@ -51,7 +51,29 @@ function App() {
   const [hasConfigured, setHasConfigured] = useState(true);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
 
-  const { isLoading, error } = useAuth0();
+  const { isLoading, error, isAuthenticated, user } = useAuth0();
+
+  useEffect(() => {
+    const syncUserToDatabase = async () => {
+      if (!isAuthenticated || !user?.sub) return;
+
+      try {
+        await fetch(`${import.meta.env.VITE_API_URL || ""}/api/users/sync`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            auth0Id: user.sub,
+            email: user.email,
+            name: user.name,
+          }),
+        });
+      } catch (err) {
+        console.error("Failed to sync Auth0 user to backend:", err);
+      }
+    };
+
+    syncUserToDatabase();
+  }, [isAuthenticated, user]);
 
   // Timer side-effect logic (moved safely away from early returns)
   useEffect(() => {
