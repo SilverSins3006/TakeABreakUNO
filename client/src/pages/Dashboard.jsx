@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import Timer from "../components/Timer";
 import Status from "../components/Status";
+import {useAuth0} from "@auth0/auth0-react";
 
 function Dashboard({
   seconds,
@@ -11,6 +12,15 @@ function Dashboard({
   onOpenSettings,
 }) {
   const navigate = useNavigate();
+  const { logout } = useAuth0();
+  const handleLogout = () => {
+    logout({ 
+      logoutParams: { 
+        returnTo: window.location.origin 
+      } 
+    });
+  };
+
 
   const handleReset = () => {
     setSeconds(sessionLength);
@@ -50,7 +60,7 @@ function Dashboard({
           <button onClick={onOpenSettings}>Settings</button>
         </div>
         <div className="button-row">
-          <button onClick={() => navigate("/account")}>Log_Out</button>
+          <button onClick={() => {handleLogout}}>Log_Out</button>
         </div>
       </div>
     </div>
