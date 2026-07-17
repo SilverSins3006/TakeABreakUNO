@@ -1,28 +1,22 @@
-import { useNavigate } from "react-router-dom";
 import Timer from "../components/Timer";
 import { useAuth0 } from "@auth0/auth0-react";
 import Status from "../components/Status";
-import {useAuth0} from "@auth0/auth0-react";
 
 function Dashboard({
   seconds,
   isRunning,
-  
+
   setIsRunning,
   setSeconds,
   sessionLength,
   onOpenSettings,
 }) {
-  const navigate = useNavigate();
   const { logout } = useAuth0();
   const handleLogout = () => {
-    logout({ 
-      logoutParams: { 
-        returnTo: window.location.origin 
-      } 
+    logout({
+      logoutParams: { returnTo: window.location.origin },
     });
   };
-
 
   const handleReset = () => {
     setSeconds(sessionLength);
