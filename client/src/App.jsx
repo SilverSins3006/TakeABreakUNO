@@ -47,6 +47,8 @@ function App() {
   const [seconds, setSeconds] = useState(1800);
   const [sessionLength, setSessionLength] = useState(1800);
   const [isRunning, setIsRunning] = useState(false);
+  const [challengeDifficulty, setChallengeDifficulty] = useState("medium");
+  const [challengeCategories, setChallengeCategories] = useState([]);
   const [dark, setDark] = useState(true); // Global theme state
   const [hasConfigured, setHasConfigured] = useState(true);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
@@ -160,6 +162,8 @@ function App() {
                   setIsRunning={setIsRunning}
                   setSeconds={setSeconds}
                   sessionLength={sessionLength}
+                  challengeDifficulty={challengeDifficulty}
+                  challengeCategories={challengeCategories}
                   onOpenSettings={() => setShowSettingsModal(true)}
                 />
               </ProtectedRoute>
@@ -174,8 +178,14 @@ function App() {
         {showSettingsModal && (
           <Settings
             seconds={seconds}
+            sessionLength={sessionLength}
             setSeconds={setSeconds}
             setSessionLength={setSessionLength}
+            setIsRunning={setIsRunning}
+            challengeDifficulty={challengeDifficulty}
+            setChallengeDifficulty={setChallengeDifficulty}
+            challengeCategories={challengeCategories}
+            setChallengeCategories={setChallengeCategories}
             isModal={true}
             onClose={() => setShowSettingsModal(false)}
             onSave={() => {
