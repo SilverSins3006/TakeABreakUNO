@@ -11,6 +11,7 @@ function Dashboard({
   sessionLength,
   onOpenSettings,
 }) {
+
   const { logout } = useAuth0();
   const handleLogout = () => {
     logout({

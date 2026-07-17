@@ -1,5 +1,3 @@
-import React from 'react';
-
 const SettingsModal = ({ isOpen, onClose, theme, toggleTheme }) => {
   if (!isOpen) return null;
 
