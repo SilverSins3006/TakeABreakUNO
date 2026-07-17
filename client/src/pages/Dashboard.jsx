@@ -1,8 +1,6 @@
-import { useNavigate } from "react-router-dom";
 import Timer from "../components/Timer";
 import { useAuth0 } from "@auth0/auth0-react";
 import Status from "../components/Status";
-import {useAuth0} from "@auth0/auth0-react";
 
 function Dashboard({
   seconds,
