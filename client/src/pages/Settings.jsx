@@ -9,11 +9,22 @@ export default function Settings({
   onClose,
   onSave,
   seconds,
+  sessionLength,
   setSeconds,
   setSessionLength,
+  setIsRunning,
+  challengeDifficulty = "medium",
+  setChallengeDifficulty,
+  challengeCategories = [],
+  setChallengeCategories,
 }) {
-  const [sessionTime, setSessionTime] = useState(seconds / 60);
-  const [categories, setCategories] = useState([]);
+  const configuredSeconds = sessionLength ?? seconds;
+  const [sessionTime, setSessionTime] = useState(() =>
+    Math.max(1, configuredSeconds / 60),
+  );
+
+  const [difficulty, setDifficulty] = useState(challengeDifficulty);
+  const [categories, setCategories] = useState(challengeCategories);
 
   const formatSessionTime = (minutes) => {
     if (minutes >= 60) {
@@ -36,6 +47,9 @@ export default function Settings({
     const nextSeconds = sessionTime * 60;
     setSeconds(nextSeconds);
     setSessionLength(nextSeconds);
+    setIsRunning?.(false);
+    setChallengeDifficulty?.(difficulty);
+    setChallengeCategories?.(categories);
     if (onSave) onSave();
   };
 
@@ -68,7 +82,8 @@ export default function Settings({
           className="select"
           id="difficulty"
           name="difficulty"
-          defaultValue="medium"
+          value={difficulty}
+          onChange={(e) => setDifficulty(e.target.value)}
         >
           <option value="easy">Easy</option>
           <option value="medium">Medium</option>
@@ -107,7 +122,11 @@ export default function Settings({
         <button type="submit" className="btn-accent">
           Save Changes
         </button>
-        {isModal && <button onClick={onClose}>Close</button>}
+        {isModal && (
+          <button type="button" onClick={onClose}>
+            Close
+          </button>
+        )}
       </div>
     </form>
   );
