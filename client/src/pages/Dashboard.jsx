@@ -5,7 +5,7 @@ import Status from "../components/Status";
 function Dashboard({
   seconds,
   isRunning,
-  
+
   setIsRunning,
   setSeconds,
   sessionLength,
@@ -14,13 +14,10 @@ function Dashboard({
 
   const { logout } = useAuth0();
   const handleLogout = () => {
-    logout({ 
-      logoutParams: { 
-        returnTo: window.location.origin 
-      } 
+    logout({
+      logoutParams: { returnTo: window.location.origin },
     });
   };
-
 
   const handleReset = () => {
     setSeconds(sessionLength);
