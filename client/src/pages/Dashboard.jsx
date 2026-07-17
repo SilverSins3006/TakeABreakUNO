@@ -5,22 +5,18 @@ import Status from "../components/Status";
 function Dashboard({
   seconds,
   isRunning,
-  
+
   setIsRunning,
   setSeconds,
   sessionLength,
   onOpenSettings,
 }) {
-  const navigate = useNavigate();
   const { logout } = useAuth0();
   const handleLogout = () => {
-    logout({ 
-      logoutParams: { 
-        returnTo: window.location.origin 
-      } 
+    logout({
+      logoutParams: { returnTo: window.location.origin },
     });
   };
-
 
   const handleReset = () => {
     setSeconds(sessionLength);
