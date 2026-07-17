@@ -137,6 +137,9 @@ Currently working:
 - Users can select more than one challenge category.
 - Basics automated tests have been added for the timer.
 - Logout, page loading, and deployment issues have been fixed.
+
+Still in progress:
+
 - Selecting difficulty and categories do not yet change which challenge appears.
 - The challenge completion counter and XP rewards are not yet functional.
 - The insights page still needs to be completed.
