@@ -9,6 +9,8 @@ function Dashboard({
   setIsRunning,
   setSeconds,
   sessionLength,
+  challengeDifficulty,
+  challengeCategories,
   onOpenSettings,
 }) {
 
@@ -46,7 +48,11 @@ function Dashboard({
         </div>
 
         <div className="status">
-          <Status isBreakTime={seconds === 0} />
+          <Status 
+          isBreakTime={seconds === 0} 
+          difficulty={challengeDifficulty}
+          categories={challengeCategories}
+          />
         </div>
 
         <div className="button-row">

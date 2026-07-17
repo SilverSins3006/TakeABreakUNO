@@ -4,18 +4,35 @@ import { useState, useEffect } from "react";
 // if it not, it will display "Not Break Time"
 // else display the current challenge's title and description
 
-function Status({ isBreakTime }) {
+function Status({ isBreakTime, difficulty, categories = [] }) {
   const [currentChallenge, setCurrentChallenge] = useState(null);
 
   useEffect(() => {
     if (!isBreakTime) return;
+
+    const params = new URLSearchParams();
+    if (difficulty) {
+      params.set("difficulty", difficulty);
+    }
+
+    if (categories.length > 0) {
+      const randomIndex = Math.floor(Math.random() * categories.length);
+      params.set("category", categories[randomIndex]);
+    }
+
+    const query = params.toString();
+    const challengeUrl = `/api/challenges/random${
+      query ? `?${query}` : ""
+    }`;
 
     // Fetch the current challenge from the server.
     // Use a relative path so the dev proxy or same-origin deployment works.
     const ac = new AbortController();
     (async () => {
       try {
-        const response = await fetch('/api/challenges/random', { signal: ac.signal });
+        const response = await fetch(challengeUrl, { 
+          signal: ac.signal, 
+        });
         if (!response.ok) {
           console.error(
             "Failed to fetch challenge, status:",
@@ -34,7 +51,7 @@ function Status({ isBreakTime }) {
       }
     })();
     return () => ac.abort();
-  }, [isBreakTime]);
+  }, [isBreakTime, difficulty, categories]);
 
   return isBreakTime ? (
     <div className="status-container">
