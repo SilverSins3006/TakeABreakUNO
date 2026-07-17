@@ -99,3 +99,28 @@ Still in progress:
 - Some buttons and UI elements may still be placeholder features.
 - Timer and challenge functionality may need additional integration.
 - More database routes, challenge logic, and user settings will be added in future milestones.
+
+### Code Milestone 2
+
+What is Complete:
+
+- Database is set up.
+- The challenge table has been seeded.
+- Project architecture is set up.
+- Vercel and Neon SQL tables are created and connected.
+- API routes were created to query the database for challenges.
+- Main page design is complete.
+- Setting user interface is complete.
+- Setting page design is complete.
+- Login setup has been started.
+- Baseline functionality is set up.
+- Since Milestone 1, the codebase has been reorganized for better modularity.
+
+What Needs to be Done:
+
+- Connect the remaining pieces to achieve full functionality.
+- Create a status/state system so when timer runs out, a random challenge is retrieved from the Neon challenge table.
+- Test for bugs
+- Complete login status handling.
+- Add difficulty selection functionality.
+- Make database calls from the frontend.
