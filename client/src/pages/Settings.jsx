@@ -115,6 +115,7 @@ export default function Settings({
     <option value="outside">Get Outside</option>
     <option value="exercise">Exercise</option>
     <option value="stretch">Stretch</option>
+    <option value="chores">Chores</option>
   </select>
 </div>
 
