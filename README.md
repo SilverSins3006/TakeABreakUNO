@@ -124,3 +124,24 @@ What Needs to be Done:
 - Complete login status handling.
 - Add difficulty selection functionality.
 - Make database calls from the frontend.
+
+### Code Milestone 3
+
+Currently working:
+
+- Users must be logged in to access the Dashboard, Setting, and Insights pages.
+- User accounts are connected to the Neon database after login.
+- A Reset button has been added to the timer.
+- The page changes to break time when the timer reaches zero.
+- A random challenge is now displayed when break time begins.
+- Users can select more than one challenge category.
+- Basics automated tests have been added for the timer.
+- Logout, page loading, and deployment issues have been fixed.
+- Selecting difficulty and categories do not yet change which challenge appears.
+- The challenge completion counter and XP rewards are not yet functional.
+- The insights page still needs to be completed.
+- Additional testing and bug fixes are still needed. 
+Still in progress:
+
+- User setting are not saved after refreshing or logging back in.
+- Selecting difficulty and categories do not yet change which 
