@@ -1,5 +1,3 @@
-import React from "react";
-
 /**
  * @file Timer component.
  * @brief Formats and renders remaining session time as MM:SS.

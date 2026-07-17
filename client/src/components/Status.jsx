@@ -8,35 +8,34 @@ function Status({ isBreakTime }) {
   const [currentChallenge, setCurrentChallenge] = useState(null);
 
   useEffect(() => {
-    if (isBreakTime) {
-      // Fetch the current challenge from the server.
-      // Use a relative path so the dev proxy or same-origin deployment works.
-      const ac = new AbortController();
-      (async () => {
-        try {
-          const response = await fetch('/api/challenges/random', { signal: ac.signal });
-          if (!response.ok) {
-            console.error(
-              "Failed to fetch challenge, status:",
-              response.status,
-            );
-            setCurrentChallenge(null);
-            return;
-          }
-          const data = await response.json();
-          setCurrentChallenge(data);
-          console.log("Fetched challenge:", data);
-        } catch (error) {
-          if (error.name !== "AbortError") {
-            console.error("Error fetching current challenge:", error);
-          }
+    if (!isBreakTime) return;
+
+    // Fetch the current challenge from the server.
+    // Use a relative path so the dev proxy or same-origin deployment works.
+    const ac = new AbortController();
+    (async () => {
+      try {
+        const response = await fetch('/api/challenges/random', { signal: ac.signal });
+        if (!response.ok) {
+          console.error(
+            "Failed to fetch challenge, status:",
+            response.status,
+          );
+          setCurrentChallenge(null);
+          return;
         }
-      })();
-      return () => ac.abort();
-    } else {
-      setCurrentChallenge(null);
-    }
+        const data = await response.json();
+        setCurrentChallenge(data);
+        console.log("Fetched challenge:", data);
+      } catch (error) {
+        if (error.name !== "AbortError") {
+          console.error("Error fetching current challenge:", error);
+        }
+      }
+    })();
+    return () => ac.abort();
   }, [isBreakTime]);
+
   return isBreakTime ? (
     <div className="status-container">
       {currentChallenge ? (
