@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "client": "cd client && npm run dev",
-    "server": "cd server && node index.js",
+    "server": "cd server && node api/index.js",
     "dev": "npm-run-all --parallel client server"
   },
   "devDependencies": {
@@ -13,8 +13,10 @@
   "dependencies": {
     "@auth0/auth0-react": "^2.19.0",
     "@neondatabase/serverless": "^1.1.0",
+    "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
-    "pg": "^8.22.0"
+    "pg": "^8.22.0",
+    "ws": "^8.21.1"
   }
 }
