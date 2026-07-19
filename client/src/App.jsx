@@ -13,6 +13,7 @@ import Account from "./pages/Account";
 import Settings from "./pages/Settings";
 import Dashboard from "./pages/Dashboard";
 import Insights from "./pages/Insights";
+import AddChallenge from "./pages/AddChallenge";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -185,6 +186,8 @@ function App() {
               </ProtectedRoute>
             }
           />
+
+          <Route path="/addchallenge" element={<AddChallenge />} />
 
           <Route path="*" element={<Navigate to="/account" replace />} />
         </Routes>
