@@ -19,8 +19,6 @@ export default function Settings({
   setChallengeCategories,
   userId,
 }) {
-  const apiBaseUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
-
   const configuredSeconds = sessionLength ?? seconds;
   const [sessionTime, setSessionTime] = useState(() =>
     Math.max(1, configuredSeconds / 60),
@@ -28,6 +26,8 @@ export default function Settings({
 
   const [difficulty, setDifficulty] = useState(challengeDifficulty);
   const [categories, setCategories] = useState(challengeCategories);
+
+  const apiBaseUrl = import.meta.env.VITE_API_URL || "";
 
   const formatSessionTime = (minutes) => {
     if (minutes >= 60) {
@@ -43,22 +43,19 @@ export default function Settings({
 
   const syncPreferencesToDB = async () => {
     try {
-      await fetch(
-        `${apiBaseUrl}/api/users/preferences`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            userId,
-            auth0Id: userId,
-            sessionLengthMinutes: sessionTime * 60,
-            challengeDifficulty: difficulty,
-            preferredChallengeTypes: categories,
-          }),
+      await fetch(`${apiBaseUrl}/api/users/preferences`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+        body: JSON.stringify({
+          userId,
+          auth0Id: userId,
+          sessionLengthMinutes: sessionTime * 60,
+          challengeDifficulty: difficulty,
+          preferredChallengeTypes: categories,
+        }),
+      });
     } catch (error) {
       console.error("Failed to sync preferences to DB:", error);
     }

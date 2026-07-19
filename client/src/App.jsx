@@ -44,8 +44,6 @@ function ProtectedRoute({ children }) {
  * @returns {JSX.Element} The application layout and route structure.
  */
 function App() {
-  const apiBaseUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
-
   const [seconds, setSeconds] = useState(1800);
   const [sessionLength, setSessionLength] = useState(1800);
   const [isRunning, setIsRunning] = useState(false);
@@ -56,6 +54,7 @@ function App() {
   const [showSettingsModal, setShowSettingsModal] = useState(false);
 
   const { isLoading, error, isAuthenticated, user } = useAuth0();
+  const apiBaseUrl = import.meta.env.VITE_API_URL || "";
 
   useEffect(() => {
     const syncUserToDatabase = async () => {
