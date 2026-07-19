@@ -54,13 +54,14 @@ function App() {
   const [showSettingsModal, setShowSettingsModal] = useState(false);
 
   const { isLoading, error, isAuthenticated, user } = useAuth0();
+  const apiBaseUrl = import.meta.env.VITE_API_URL || "";
 
   useEffect(() => {
     const syncUserToDatabase = async () => {
       if (!isAuthenticated || !user?.sub) return;
 
       try {
-        await fetch(`${import.meta.env.VITE_API_URL || ""}/api/users/sync`, {
+        await fetch(`${apiBaseUrl}/api/users/sync`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -69,6 +70,20 @@ function App() {
             name: user.name,
           }),
         });
+
+        const res = await fetch(
+          `${apiBaseUrl}/api/users/preferences?auth0Id=${encodeURIComponent(user.sub)}`,
+        );
+        const data = await res.json();
+
+        if (data.user) {
+          // set saved preferences here
+          console.log("Fetched user preferences:", data.user);
+          setSessionLength(data.user.session_length_minutes ?? 1800);
+          setSeconds(data.user.session_length_minutes ?? 1800);
+          setChallengeDifficulty(data.user.challenge_difficulty ?? "medium");
+          setChallengeCategories(data.user.preferred_challenge_types ?? []);
+        }
       } catch (err) {
         console.error("Failed to sync Auth0 user to backend:", err);
       }
@@ -136,6 +151,7 @@ function App() {
                   seconds={seconds}
                   setSeconds={setSeconds}
                   setSessionLength={setSessionLength}
+                  userId={user?.sub}
                 />
               </ProtectedRoute>
             }
@@ -192,6 +208,7 @@ function App() {
               setHasConfigured(true);
               setShowSettingsModal(false);
             }}
+            userId={user?.sub}
           />
         )}
       </Router>

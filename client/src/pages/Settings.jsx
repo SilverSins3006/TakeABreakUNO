@@ -17,6 +17,7 @@ export default function Settings({
   setChallengeDifficulty,
   challengeCategories = [],
   setChallengeCategories,
+  userId,
 }) {
   const configuredSeconds = sessionLength ?? seconds;
   const [sessionTime, setSessionTime] = useState(() =>
@@ -25,6 +26,8 @@ export default function Settings({
 
   const [difficulty, setDifficulty] = useState(challengeDifficulty);
   const [categories, setCategories] = useState(challengeCategories);
+
+  const apiBaseUrl = import.meta.env.VITE_API_URL || "";
 
   const formatSessionTime = (minutes) => {
     if (minutes >= 60) {
@@ -36,6 +39,26 @@ export default function Settings({
     }
 
     return `${minutes} min`;
+  };
+
+  const syncPreferencesToDB = async () => {
+    try {
+      await fetch(`${apiBaseUrl}/api/users/preferences`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId,
+          auth0Id: userId,
+          sessionLengthMinutes: sessionTime * 60,
+          challengeDifficulty: difficulty,
+          preferredChallengeTypes: categories,
+        }),
+      });
+    } catch (error) {
+      console.error("Failed to sync preferences to DB:", error);
+    }
   };
 
   /**
@@ -50,6 +73,7 @@ export default function Settings({
     setIsRunning?.(false);
     setChallengeDifficulty?.(difficulty);
     setChallengeCategories?.(categories);
+    syncPreferencesToDB();
     if (onSave) onSave();
   };
 
@@ -92,32 +116,32 @@ export default function Settings({
       </div>
 
       {/* Handling multiple selection for challenge categories */}
-<div>
-  <label htmlFor="categories">Challenge Categories</label>
+      <div>
+        <label htmlFor="categories">Challenge Categories</label>
 
-  <select
-    className="select"
-    id="categories"
-    name="categories"
-    multiple
-    value={categories}
-    onChange={(e) => {
-      const selectedCategories = Array.from(
-        e.target.selectedOptions,
-        (option) => option.value
-      );
+        <select
+          className="select"
+          id="categories"
+          name="categories"
+          multiple
+          value={categories}
+          onChange={(e) => {
+            const selectedCategories = Array.from(
+              e.target.selectedOptions,
+              (option) => option.value,
+            );
 
-      setCategories(selectedCategories);
-    }}
-  >
-    <option value="hunt">Scavenger Hunt</option>
-    <option value="brain">Brain Teaser</option>
-    <option value="outside">Get Outside</option>
-    <option value="exercise">Exercise</option>
-    <option value="stretch">Stretch</option>
-    <option value="chores">Chores</option>
-  </select>
-</div>
+            setCategories(selectedCategories);
+          }}
+        >
+          <option value="hunt">Scavenger Hunt</option>
+          <option value="brain">Brain Teaser</option>
+          <option value="outside">Get Outside</option>
+          <option value="exercise">Exercise</option>
+          <option value="stretch">Stretch</option>
+          <option value="chores">Chores</option>
+        </select>
+      </div>
 
       <div className="button-row">
         <button type="submit" className="btn-accent">
