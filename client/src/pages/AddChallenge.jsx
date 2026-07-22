@@ -11,7 +11,6 @@ function AddChallenge({ userId: propUserId }) {
   const [type, setType] = useState("Exercise");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
 
   const apiBaseUrl = import.meta.env.VITE_API_URL || "";
 
@@ -54,6 +53,7 @@ function AddChallenge({ userId: propUserId }) {
   };
 
   const addChallengeToDatabase = async (challenge) => {
+    let errorMessage = "";
     try {
       const response = await fetch(`${apiBaseUrl}/api/challenges`, {
         method: "POST",
@@ -67,7 +67,7 @@ function AddChallenge({ userId: propUserId }) {
 
       if (!response.ok) {
         const messages = Object.values(data.fields || {}).join(" ");
-        setErrorMessage("Failed to add challenge: " + (messages || data.error));
+        errorMessage = "Failed to add challenge: " + (messages || data.error);
         throw new Error("Failed to add challenge");
       }
 
