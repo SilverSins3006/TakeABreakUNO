@@ -187,7 +187,7 @@ function App() {
             }
           />
 
-          <Route path="/addchallenge" element={<AddChallenge />} />
+          <Route path="/addchallenge" element={<AddChallenge userId={user?.sub} />} />
 
           <Route path="*" element={<Navigate to="/account" replace />} />
         </Routes>

@@ -2,13 +2,13 @@
  * @file Challenges route module.
  * @brief Provides endpoints for retrieving challenge data and category normalization.
  */
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const db = require('../config/db');
+const db = require("../config/db");
 const difficultyMap = {
-  easy: 'Easy',
-  medium: 'Medium',
-  hard: 'Hard',
+  easy: "Easy",
+  medium: "Medium",
+  hard: "Hard",
 };
 
 /**
@@ -16,31 +16,43 @@ const difficultyMap = {
  * @type {Object<string,string>}
  */
 const categoryMap = {
-  exercise: 'Exercise',
-  stretch: 'Stretch',
-  chores: 'Chores',
-  brain: 'Brain Teaser',
-  'brain teaser': 'Brain Teaser',
-  'brain-teaser': 'Brain Teaser',
-  hunt: 'Scavenger Hunt',
-  'scavenger hunt': 'Scavenger Hunt',
-  'scavenger-hunt': 'Scavenger Hunt',
-  outside: 'Get Outside',
-  'get outside': 'Get Outside',
-  'get-outside': 'Get Outside',
+  exercise: "Exercise",
+  stretch: "Stretch",
+  chores: "Chores",
+  brain: "Brain Teaser",
+  "brain teaser": "Brain Teaser",
+  "brain-teaser": "Brain Teaser",
+  hunt: "Scavenger Hunt",
+  "scavenger hunt": "Scavenger Hunt",
+  "scavenger-hunt": "Scavenger Hunt",
+  outside: "Get Outside",
+  "get outside": "Get Outside",
+  "get-outside": "Get Outside",
+};
+
+const durationMap = {
+  Easy: 10,
+  Medium: 20,
+  Hard: 30,
+};
+
+const xpMap = {
+  Easy: 10,
+  Medium: 20,
+  Hard: 30,
 };
 
 const TITLE_MAX_LENGTH = 120;
 const DESCRIPTION_MAX_LENGTH = 1000;
 const normalizeDifficulty = (difficulty) => {
-  if (typeof difficulty !== 'string') {
+  if (typeof difficulty !== "string") {
     return null;
   }
   return difficultyMap[difficulty.trim().toLowerCase()] || null;
 };
 
 const normalizeCategory = (category) => {
-  if (typeof category !== 'string') {
+  if (typeof category !== "string") {
     return null;
   }
   return categoryMap[category.trim().toLowerCase()] || null;
@@ -60,9 +72,7 @@ router.post("/", async (req, res) => {
   const userIdentifier = getUserIdentifier(req);
 
   const title =
-    typeof req.body?.title === "string"
-      ? req.body.title.trim()
-      : "";
+    typeof req.body?.title === "string" ? req.body.title.trim() : "";
 
   const description =
     typeof req.body?.description === "string"
@@ -73,9 +83,11 @@ router.post("/", async (req, res) => {
 
   // Accept category normally.
   // Also accept type because the current React page calls it type.
-  const category = normalizeCategory(
-    req.body?.category || req.body?.type
-  );
+  const category = normalizeCategory(req.body?.category || req.body?.type);
+
+  const durationMinutes = durationMap[difficulty]?.toString() || "30";
+
+  const xpReward = xpMap[difficulty]?.toString() || "30";
 
   const validationErrors = {};
 
@@ -86,25 +98,21 @@ router.post("/", async (req, res) => {
   if (!title) {
     validationErrors.title = "Title is required.";
   } else if (title.length > TITLE_MAX_LENGTH) {
-    validationErrors.title =
-      `Title must be ${TITLE_MAX_LENGTH} characters or fewer.`;
+    validationErrors.title = `Title must be ${TITLE_MAX_LENGTH} characters or fewer.`;
   }
 
   if (!description) {
     validationErrors.description = "Description is required.";
   } else if (description.length > DESCRIPTION_MAX_LENGTH) {
-    validationErrors.description =
-      `Description must be ${DESCRIPTION_MAX_LENGTH} characters or fewer.`;
+    validationErrors.description = `Description must be ${DESCRIPTION_MAX_LENGTH} characters or fewer.`;
   }
 
   if (!difficulty) {
-    validationErrors.difficulty =
-      "Difficulty must be Easy, Medium, or Hard.";
+    validationErrors.difficulty = "Difficulty must be Easy, Medium, or Hard.";
   }
 
   if (!category) {
-    validationErrors.category =
-      "Please select a valid category.";
+    validationErrors.category = "Please select a valid category.";
   }
 
   if (Object.keys(validationErrors).length > 0) {
@@ -124,7 +132,7 @@ router.post("/", async (req, res) => {
            OR id::text = $2
         LIMIT 1;
       `,
-      [userIdentifier, String(userIdentifier)]
+      [userIdentifier, String(userIdentifier)],
     );
 
     if (userResult.rows.length === 0) {
@@ -141,40 +149,28 @@ router.post("/", async (req, res) => {
         INSERT INTO challenges (
           title,
           description,
-          difficulty,
           category,
-          created_by_user_id,
-          created_at,
-          updated_at
+          difficulty,
+          duration_minutes,
+          xp_reward
         )
-        VALUES ($1, $2, $3, $4, $5, NOW(), NOW())
+        VALUES ($1, $2, $3, $4, $5, $6)
         RETURNING
-          id,
           title,
           description,
-          difficulty,
           category,
-          created_by_user_id,
-          created_at,
-          updated_at;
+          difficulty,
+          duration_minutes,
+          xp_reward
       `,
-      [
-        title,
-        description,
-        difficulty,
-        category,
-        databaseUserId,
-      ]
+      [title, description, category, difficulty, durationMinutes, xpReward],
     );
 
     return res.status(201).json({
       challenge: result.rows[0],
     });
   } catch (error) {
-    console.error(
-      "Failed to create challenge:",
-      error.message
-    );
+    console.error("Failed to create challenge:", error.message);
 
     return res.status(500).json({
       error: "Failed to create challenge",
@@ -190,16 +186,19 @@ router.post("/", async (req, res) => {
  * @param {string} [req.query.category] Optional category filter.
  * @param {Object} res Express response object.
  */
-router.get('/random', async (req, res) => {
+router.get("/random", async (req, res) => {
   try {
     // Force the browser and Vercel edge network to skip caching this request
-    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
-    res.setHeader('Pragma', 'no-cache');
-    res.setHeader('Expires', '0');
+    res.setHeader(
+      "Cache-Control",
+      "no-store, no-cache, must-revalidate, proxy-revalidate",
+    );
+    res.setHeader("Pragma", "no-cache");
+    res.setHeader("Expires", "0");
 
     const { difficulty, category } = req.query;
 
-    let query = 'SELECT * FROM challenges';
+    let query = "SELECT * FROM challenges";
     const conditions = [];
     const values = [];
 
@@ -215,23 +214,23 @@ router.get('/random', async (req, res) => {
     }
 
     if (conditions.length > 0) {
-      query += ` WHERE ${conditions.join(' AND ')}`;
+      query += ` WHERE ${conditions.join(" AND ")}`;
     }
 
-    query += ' ORDER BY RANDOM() LIMIT 1';
+    query += " ORDER BY RANDOM() LIMIT 1";
 
     const result = await db.query(query, values);
 
     if (result.rows.length === 0) {
       return res.status(404).json({
-        message: 'No matching challenge found.',
+        message: "No matching challenge found.",
       });
     }
 
     res.json(result.rows[0]);
   } catch (err) {
-    console.error('Failed to get random challenge:', err.message);
-    res.status(500).json({ error: 'Failed to get random challenge' });
+    console.error("Failed to get random challenge:", err.message);
+    res.status(500).json({ error: "Failed to get random challenge" });
   }
 });
 
@@ -243,11 +242,11 @@ router.get('/random', async (req, res) => {
  * @param {string} [req.query.category] Optional category filter.
  * @param {Object} res Express response object.
  */
-router.get('/', async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const { difficulty, category } = req.query;
 
-    let query = 'SELECT * FROM challenges';
+    let query = "SELECT * FROM challenges";
     const conditions = [];
     const values = [];
 
@@ -263,16 +262,16 @@ router.get('/', async (req, res) => {
     }
 
     if (conditions.length > 0) {
-      query += ` WHERE ${conditions.join(' AND ')}`;
+      query += ` WHERE ${conditions.join(" AND ")}`;
     }
 
-    query += ' ORDER BY id';
+    query += " ORDER BY id";
 
     const result = await db.query(query, values);
     res.json(result.rows);
   } catch (err) {
-    console.error('Failed to get challenges:', err.message);
-    res.status(500).json({ error: 'Failed to get challenges' });
+    console.error("Failed to get challenges:", err.message);
+    res.status(500).json({ error: "Failed to get challenges" });
   }
 });
 
