@@ -11,6 +11,7 @@ function AddChallenge({ userId: propUserId }) {
   const [type, setType] = useState("Exercise");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const apiBaseUrl = import.meta.env.VITE_API_URL || "";
 
@@ -42,13 +43,14 @@ function AddChallenge({ userId: propUserId }) {
     };
 
     console.log(newChallenge);
-    try {
-      addChallengeToDatabase(newChallenge);
-      alert("Challenge Added!");
-    } catch (error) {
-      console.error("Error adding challenge:", error);
-      alert("Failed to add challenge. Please try again.");
-    }
+    addChallengeToDatabase(newChallenge);
+  };
+
+  const clearForm = () => {
+    setDifficulty("Easy");
+    setType("Exercise");
+    setTitle("");
+    setDescription("");
   };
 
   const addChallengeToDatabase = async (challenge) => {
@@ -61,14 +63,20 @@ function AddChallenge({ userId: propUserId }) {
         body: JSON.stringify(challenge),
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
+        const messages = Object.values(data.fields || {}).join(" ");
+        setErrorMessage("Failed to add challenge: " + (messages || data.error));
         throw new Error("Failed to add challenge");
       }
 
-      const data = await response.json();
       console.log("Challenge added:", data);
+      alert("Challenge added successfully!");
+      clearForm();
     } catch (error) {
       console.error("Error adding challenge:", error);
+      alert(errorMessage || "Failed to add challenge");
     }
   };
 
