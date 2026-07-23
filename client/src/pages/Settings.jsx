@@ -20,9 +20,9 @@ import { useState } from "react";
  * @param {Function} props.setSessionLength - Updates the session length state after saving.
  * @param {Function} [props.setIsRunning] - Stops the timer when preferences are saved.
  * @param {string} [props.challengeDifficulty] - Current difficulty setting, defaults to "medium".
- * @param {Function} props.setChallengeDifficulty - Updates the difficulty state after saving.
+ * @param {Function} [props.setChallengeDifficulty] - Updates the difficulty state after saving.
  * @param {string[]} [props.challengeCategories] - Currently selected challenge categories.
- * @param {Function} props.setChallengeCategories - Updates the categories state after saving.
+ * @param {Function} [props.setChallengeCategories] - Updates the categories state after saving.
  * @param {string} props.userId - Auth0 user ID, used to sync preferences to the backend.
  * @returns {JSX.Element} The rendered preferences form, wrapped in a modal or plain container.
  */
