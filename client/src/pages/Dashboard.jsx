@@ -48,10 +48,11 @@ function Dashboard({
         </div>
 
         <div className="status">
-          <Status 
-          isBreakTime={seconds === 0} 
-          difficulty={challengeDifficulty}
-          categories={challengeCategories}
+          <Status
+            key={seconds === 0 ? "break" : "work"}
+            isBreakTime={seconds === 0}
+            difficulty={challengeDifficulty}
+            categories={challengeCategories}
           />
         </div>
 

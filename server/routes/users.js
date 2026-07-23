@@ -124,6 +124,8 @@ router.put("/preferences", async (req, res) => {
     sessionLengthMinutes,
     challengeDifficulty,
     preferredChallengeTypes,
+    xp,
+    challengesCompleted,
   } = req.body;
 
   const identifier = auth0Id || userId;
@@ -150,9 +152,11 @@ router.put("/preferences", async (req, res) => {
       `
       UPDATE users
       SET
-        session_length_minutes = $1,
-        challenge_difficulty = $2,
-        preferred_challenge_types = $3,
+        session_length_minutes = COALESCE($1, session_length_minutes),
+        challenge_difficulty = COALESCE($2, challenge_difficulty),
+        preferred_challenge_types = COALESCE($3, preferred_challenge_types),
+        xp = COALESCE($6, xp),
+        challenges_completed = COALESCE($7, challenges_completed),
         updated_at = NOW()
       WHERE auth0_id = $4 OR id::text = $5
       RETURNING id, email, display_name, session_length_minutes, challenge_difficulty, preferred_challenge_types, xp, challenges_completed, current_streak, longest_streak, created_at, updated_at;
@@ -163,6 +167,8 @@ router.put("/preferences", async (req, res) => {
         normalizedPreferredTypes,
         identifier,
         identifier,
+        xp,
+        challengesCompleted,
       ],
     );
 
