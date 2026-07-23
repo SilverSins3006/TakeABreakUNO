@@ -37,10 +37,9 @@ db.query('SELECT NOW()')
 /**
  * Quick check to confirm this is the file Vercel is actually running.
  * @route GET /api
- * @param req - Express request, nothing needed here
- * @param res - Express response
- * @returns JSON message confirming the api is up
- */
+ * @param {Object} req - Express request.
+ * @param {Object} res - Express response.
+ * @returns {void}
 app.get('/api', (req, res) => {
   res.json({ message: 'Express backend running successfully on Vercel!' });
 });
