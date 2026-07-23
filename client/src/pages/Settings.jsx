@@ -43,6 +43,17 @@ export default function Settings({
 
   const syncPreferencesToDB = async () => {
     try {
+      const userResponse = await fetch(
+        `${apiBaseUrl}/api/users/preferences?auth0Id=${encodeURIComponent(userId || "")}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+      );
+      const userData = await userResponse.json();
+
       await fetch(`${apiBaseUrl}/api/users/preferences`, {
         method: "PUT",
         headers: {
@@ -54,6 +65,8 @@ export default function Settings({
           sessionLengthMinutes: sessionTime * 60,
           challengeDifficulty: difficulty,
           preferredChallengeTypes: categories,
+          xp: userData.user?.xp ?? 0,
+          challengesCompleted: userData.user?.challenges_completed ?? 0,
         }),
       });
     } catch (error) {
