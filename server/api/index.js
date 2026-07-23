@@ -1,3 +1,9 @@
+/**
+ * @file This is the file Vercel actually deploys as the serverless function.
+ * Sets up Express, checks the db connection on boot, and wires up the routers.
+ * Also runs locally with its own listener when NODE_ENV isn't production.
+ */
+
 const express = require('express');
 const cors = require('cors');
 const app = express();
@@ -13,7 +19,11 @@ app.use(cors());
 // without this req.body is undefined on POST/PUT routes
 app.use(express.json());
 
-// quick check on startup that Neon is actually reachable
+/**
+ * Just a sanity check that Neon is actually up when the server boots.
+ * Logs the db time if it connects, logs the error if it doesn't.
+ * Doesn't stop the app either way, just for debugging deploys.
+ */
 db.query('SELECT NOW()')
   .then((result) => {
     console.log('DATABASE CONNECTED SUCCESSFULLY');
@@ -24,7 +34,13 @@ db.query('SELECT NOW()')
     console.error('Error details:', err.message);
   });
 
-// simple check to confirm this is actually the file Vercel is running
+/**
+ * Quick check to confirm this is the file Vercel is actually running.
+ * @route GET /api
+ * @param req - Express request, nothing needed here
+ * @param res - Express response
+ * @returns JSON message confirming the api is up
+ */
 app.get('/api', (req, res) => {
   res.json({ message: 'Express backend running successfully on Vercel!' });
 });

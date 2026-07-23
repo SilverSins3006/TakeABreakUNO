@@ -1,6 +1,7 @@
 /**
- * @file Challenges route module.
- * @brief Provides endpoints for retrieving challenge data and category normalization.
+ * @file Challenges route module. Provides endpoints for creating challenges,
+ * fetching a single random challenge, and listing all challenges, with
+ * optional difficulty and category filters.
  */
 const express = require("express");
 const router = express.Router();
@@ -12,7 +13,8 @@ const difficultyMap = {
 };
 
 /**
- * @brief Maps category aliases to normalized challenge categories.
+ * Maps category aliases (lowercase, spaced, or hyphenated) to the
+ * normalized category names actually stored in the database.
  * @type {Object<string,string>}
  */
 const categoryMap = {
@@ -44,6 +46,13 @@ const xpMap = {
 
 const TITLE_MAX_LENGTH = 120;
 const DESCRIPTION_MAX_LENGTH = 1000;
+
+/**
+ * Normalizes a difficulty string to one of "Easy", "Medium", or "Hard".
+ * Case-insensitive, trims whitespace. Returns null if it doesn't match.
+ * @param {string} difficulty - Raw difficulty value from the request.
+ * @returns {string|null} The normalized difficulty, or null if invalid.
+ */
 const normalizeDifficulty = (difficulty) => {
   if (typeof difficulty !== "string") {
     return null;
@@ -51,6 +60,12 @@ const normalizeDifficulty = (difficulty) => {
   return difficultyMap[difficulty.trim().toLowerCase()] || null;
 };
 
+/**
+ * Normalizes a category string using categoryMap, so aliases like
+ * "brain-teaser" and "Brain Teaser" both resolve to the same value.
+ * @param {string} category - Raw category value from the request.
+ * @returns {string|null} The normalized category, or null if invalid.
+ */
 const normalizeCategory = (category) => {
   if (typeof category !== "string") {
     return null;
@@ -58,6 +73,13 @@ const normalizeCategory = (category) => {
   return categoryMap[category.trim().toLowerCase()] || null;
 };
 
+/**
+ * Pulls a user identifier off the request, checking Auth0's payload first,
+ * then falling back to whatever the request body provided. Used since some
+ * routes are hit before full Auth0 middleware context is available.
+ * @param {Object} req - Express request.
+ * @returns {string|null} The user identifier, or null if none was found.
+ */
 const getUserIdentifier = (req) => {
   return (
     req.auth?.payload?.sub ||
@@ -68,6 +90,15 @@ const getUserIdentifier = (req) => {
   );
 };
 
+/**
+ * Creates a new challenge. Validates title, description, difficulty, and
+ * category, looks up the internal user ID from the Auth0 identifier, then
+ * inserts the challenge.
+ * @route POST /api/challenges
+ * @param {Object} req - Expects title, description, difficulty, and category (or type) in the body.
+ * @param {Object} res - Sends the created challenge, or a 400/404/500 on failure.
+ * @returns {Promise<void>}
+ */
 router.post("/", async (req, res) => {
   const userIdentifier = getUserIdentifier(req);
 
@@ -179,12 +210,13 @@ router.post("/", async (req, res) => {
 });
 
 /**
- * @brief Get a single random challenge.
+ * Gets a single random challenge, optionally filtered by difficulty and/or
+ * category. Sets no-cache headers so Vercel's edge network and the browser
+ * don't serve a stale result.
  * @route GET /api/challenges/random
- * @param {Object} req Express request object.
- * @param {string} [req.query.difficulty] Optional difficulty filter.
- * @param {string} [req.query.category] Optional category filter.
- * @param {Object} res Express response object.
+ * @param {Object} req - Optional difficulty and category in the query string.
+ * @param {Object} res - Sends the random challenge, a 404 if none match, or a 500 on failure.
+ * @returns {Promise<void>}
  */
 router.get("/random", async (req, res) => {
   try {
@@ -235,12 +267,12 @@ router.get("/random", async (req, res) => {
 });
 
 /**
- * @brief Get all challenges, optionally filtered by difficulty or category.
+ * Lists all challenges, optionally filtered by difficulty and/or category,
+ * ordered by id.
  * @route GET /api/challenges
- * @param {Object} req Express request object.
- * @param {string} [req.query.difficulty] Optional difficulty filter.
- * @param {string} [req.query.category] Optional category filter.
- * @param {Object} res Express response object.
+ * @param {Object} req - Optional difficulty and category in the query string.
+ * @param {Object} res - Sends an array of matching challenges, or a 500 on failure.
+ * @returns {Promise<void>}
  */
 router.get("/", async (req, res) => {
   try {

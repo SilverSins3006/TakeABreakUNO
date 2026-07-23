@@ -1,15 +1,20 @@
 /**
- * @file Timer component.
- * @brief Formats and renders remaining session time as MM:SS.
+ * @file Timer component. Formats and renders remaining session time as MM:SS
+ * (or H:MM:SS once you're past an hour).
  */
+
 /**
- * Presentational component that formats a raw seconds integer into a digital clock layout (MM:SS).
- * Receives global seconds state from App.jsx so time doesn't reset on page changes.
+ * Presentational component that formats a raw seconds integer into a digital
+ * clock layout. Receives seconds as a prop from App.jsx so the time doesn't
+ * reset when the page changes.
+ * @param {Object} props
+ * @param {number} props.seconds - Seconds remaining in the current session.
+ * @returns {JSX.Element} The formatted time as plain text.
  */
 function Timer({ seconds }) {
   /**
-   * @brief Format seconds into MM:SS.
-   * @param {number} totalSeconds Seconds remaining.
+   * Formats a raw seconds count into MM:SS, or H:MM:SS if it's over an hour.
+   * @param {number} totalSeconds - Seconds remaining.
    * @returns {string} The formatted time string.
    */
   const formatTime = (totalSeconds) => {
