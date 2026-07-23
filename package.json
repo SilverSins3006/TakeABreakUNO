@@ -5,9 +5,15 @@
   "scripts": {
     "client": "cd client && npm run dev",
     "server": "cd server && node api/index.js",
-    "dev": "npm-run-all --parallel client server"
+    "dev": "npm-run-all --parallel client server",
+    "docs": "jsdoc -c jsdoc.json",
+    "docs:clean": "rm -rf docs",
+    "docs:build": "npm run docs:clean && npm run docs"
   },
   "devDependencies": {
+    "@babel/core": "^7.29.7",
+    "@babel/preset-react": "^7.29.7",
+    "jsdoc": "^4.0.5",
     "npm-run-all": "^4.1.5"
   },
   "dependencies": {

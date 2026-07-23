@@ -1,8 +1,30 @@
 import { useState } from "react";
 
 /**
- * @file Settings component.
- * @brief Renders session and challenge preference controls.
+ * @file Settings component. Renders the preferences form for session length,
+ * challenge difficulty, and challenge categories. Can render as a standalone
+ * page or as a modal, depending on the isModal prop. Saves changes to local
+ * state and syncs them to the backend.
+ */
+
+/**
+ * Renders the preferences form and handles saving changes both to local
+ * app state (via the setters passed in) and to the backend.
+ * @param {Object} props
+ * @param {boolean} [props.isModal] - Whether to render as a modal (with backdrop and close button) or a standalone page.
+ * @param {Function} [props.onClose] - Called when the modal's close button is clicked.
+ * @param {Function} [props.onSave] - Called after preferences are saved.
+ * @param {number} [props.seconds] - Fallback session length in seconds, used if sessionLength isn't set.
+ * @param {number} [props.sessionLength] - Current session length in seconds.
+ * @param {Function} props.setSeconds - Updates the seconds state after saving.
+ * @param {Function} props.setSessionLength - Updates the session length state after saving.
+ * @param {Function} [props.setIsRunning] - Stops the timer when preferences are saved.
+ * @param {string} [props.challengeDifficulty] - Current difficulty setting, defaults to "medium".
+ * @param {Function} [props.setChallengeDifficulty] - Updates the difficulty state after saving.
+ * @param {string[]} [props.challengeCategories] - Currently selected challenge categories.
+ * @param {Function} [props.setChallengeCategories] - Updates the categories state after saving.
+ * @param {string} props.userId - Auth0 user ID, used to sync preferences to the backend.
+ * @returns {JSX.Element} The rendered preferences form, wrapped in a modal or plain container.
  */
 export default function Settings({
   isModal = false,
@@ -29,6 +51,11 @@ export default function Settings({
 
   const apiBaseUrl = import.meta.env.VITE_API_URL || "";
 
+  /**
+   * Formats a minute count into a readable string, e.g. "90" becomes "1 hr 30 min".
+   * @param {number} minutes - Session length in minutes.
+   * @returns {string} The formatted duration string.
+   */
   const formatSessionTime = (minutes) => {
     if (minutes >= 60) {
       const hours = Math.floor(minutes / 60);
@@ -41,6 +68,12 @@ export default function Settings({
     return `${minutes} min`;
   };
 
+  /**
+   * Pushes the current preferences to the backend so they persist across
+   * sessions. Fails silently (just logs) if the request errors out, since
+   * local state is already updated regardless.
+   * @returns {Promise<void>}
+   */
   const syncPreferencesToDB = async () => {
     try {
       const userResponse = await fetch(
@@ -75,8 +108,9 @@ export default function Settings({
   };
 
   /**
-   * @brief Save the current preferences.
-   * @param {Event} e Form submission event.
+   * Handles the form submission. Pushes local preference changes up to the
+   * parent's state, stops the timer, and syncs everything to the backend.
+   * @param {Event} e - The form submission event.
    */
   const handleSave = (e) => {
     e.preventDefault();
