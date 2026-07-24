@@ -40,6 +40,7 @@ db.query('SELECT NOW()')
  * @param {Object} req - Express request.
  * @param {Object} res - Express response.
  * @returns {void}
+ */
 app.get('/api', (req, res) => {
   res.json({ message: 'Express backend running successfully on Vercel!' });
 });
