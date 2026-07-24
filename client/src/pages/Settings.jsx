@@ -15,10 +15,20 @@ export default function Settings({
   const [sessionTime, setSessionTime] = useState(seconds / 60);
   const [categories, setCategories] = useState([]);
 
+  const categoryOptions = [
+    "Scavenger Hunt",
+    "Brain Teaser",
+    "Get Outside",
+    "Exercise",
+    "Stretch",
+    "Chores",
+  ];
+
   const formatSessionTime = (minutes) => {
     if (minutes >= 60) {
       const hours = Math.floor(minutes / 60);
       const remainingMinutes = minutes % 60;
+
       return remainingMinutes === 0
         ? `${hours} hr${hours > 1 ? "s" : ""}`
         : `${hours} hr${hours > 1 ? "s" : ""} ${remainingMinutes} min`;
@@ -27,20 +37,35 @@ export default function Settings({
     return `${minutes} min`;
   };
 
-  /**
-   * @brief Save the current preferences.
-   * @param {Event} e Form submission event.
-   */
+  const handleCategoryChange = (category) => {
+    setCategories((currentCategories) => {
+      if (currentCategories.includes(category)) {
+        return currentCategories.filter(
+          (currentCategory) => currentCategory !== category,
+        );
+      }
+
+      return [...currentCategories, category];
+    });
+  };
+
   const handleSave = (e) => {
     e.preventDefault();
+
     const nextSeconds = sessionTime * 60;
+
     setSeconds(nextSeconds);
     setSessionLength(nextSeconds);
-    if (onSave) onSave();
+
+    console.log("Selected categories:", categories);
+
+    if (onSave) {
+      onSave();
+    }
   };
 
   const content = (
-    <form className="card" onSubmit={(e) => handleSave(e)}>
+    <form className="card" onSubmit={handleSave}>
       <h2 style={{ color: "var(--accent)" }}>Preferences</h2>
 
       <div>
@@ -50,6 +75,7 @@ export default function Settings({
             {formatSessionTime(sessionTime)}
           </span>
         </label>
+
         <input
           id="time"
           name="time"
@@ -64,6 +90,7 @@ export default function Settings({
 
       <div>
         <label htmlFor="difficulty">Challenge Difficulty Level</label>
+
         <select
           className="select"
           id="difficulty"
@@ -76,43 +103,38 @@ export default function Settings({
         </select>
       </div>
 
-      {/* Handling multiple selection for challenge categories */}
-<div>
-  <label htmlFor="categories">Challenge Categories</label>
+      <div>
+        <p>Challenge Categories</p>
 
-  <select
-    className="select"
-    id="categories"
-    name="categories"
-    multiple
-    value={categories}
-    onChange={(e) => {
-      const selectedCategories = Array.from(
-        e.target.selectedOptions,
-        (option) => option.value
-      );
+        <div className="category-checkboxes">
+          {categoryOptions.map((category) => (
+            <label key={category} className="category-checkbox">
+              <input
+                type="checkbox"
+                checked={categories.includes(category)}
+                onChange={() => handleCategoryChange(category)}
+              />
 
-      setCategories(selectedCategories);
-    }}
-  >
-    <option value="hunt">Scavenger Hunt</option>
-    <option value="brain">Brain Teaser</option>
-    <option value="outside">Get Outside</option>
-    <option value="exercise">Exercise</option>
-    <option value="stretch">Stretch</option>
-  </select>
-</div>
+              <span>{category}</span>
+            </label>
+          ))}
+        </div>
+      </div>
 
       <div className="button-row">
         <button type="submit" className="btn-accent">
           Save Changes
         </button>
-        {isModal && <button onClick={onClose}>Close</button>}
+
+        {isModal && (
+          <button type="button" onClick={onClose}>
+            Close
+          </button>
+        )}
       </div>
     </form>
   );
 
-  // If it's a modal, wrap it in the backdrop, otherwise return just the card
   return isModal ? (
     <div className="modal-backdrop">{content}</div>
   ) : (
