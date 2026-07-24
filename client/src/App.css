@@ -347,7 +347,7 @@ button:active {
    11. SETTINGS
    ============================================================ */
 
-label {
+label, .label {
   font-size: 0.75rem;
   color: var(--text);
   text-transform: uppercase;

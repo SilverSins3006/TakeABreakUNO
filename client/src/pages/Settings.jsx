@@ -104,7 +104,9 @@ export default function Settings({
       </div>
 
       <div>
-        <p>Challenge Categories</p>
+        <p className="label" >
+          Category Selection
+        </p>
 
         <div className="category-checkboxes">
           {categoryOptions.map((category) => (
