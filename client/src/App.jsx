@@ -14,6 +14,7 @@ import Settings from "./pages/Settings";
 import Dashboard from "./pages/Dashboard";
 import Insights from "./pages/Insights";
 import AddChallenge from "./pages/AddChallenge";
+import Stats from "./pages/Stats";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -164,6 +165,15 @@ function App() {
               <ProtectedRoute>
                 <Insights dark={dark} />
               </ProtectedRoute>
+            }
+          />
+          
+          <Route
+            path="/stats"
+            element={
+              <ProtectedRoute>
+                <Stats />
+                </ProtectedRoute>
             }
           />
 

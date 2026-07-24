@@ -84,8 +84,8 @@
   padding: 1.5rem 2rem;
   border-bottom: 2px solid var(--accent);
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: 0.75rem;
   background: var(--bg);
 }
 
@@ -428,4 +428,213 @@ select {
 select[multiple] option {
   padding: 8px 12px;
   line-height: 1.8;
+}
+
+/* ============================================================
+   STATS PAGE
+   ============================================================ */
+
+.stats-page {
+  justify-content: flex-start;
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+}
+
+.stats-card {
+  width: min(100%, 720px);
+  background: var(--box-bg);
+  border: 1px solid var(--border);
+  box-shadow: var(--hard-shadow);
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.stats-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.stats-heading h2 {
+  margin-top: 0.35rem;
+  font-size: clamp(1.75rem, 5vw, 2.6rem);
+  text-transform: uppercase;
+}
+
+.stats-kicker,
+.stat-tile span,
+.xp-total span {
+  color: var(--hint);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+}
+
+.level-badge {
+  width: 92px;
+  height: 92px;
+  flex: 0 0 92px;
+  border: 2px solid var(--accent);
+  background: var(--btn-bg);
+  display: grid;
+  place-content: center;
+  text-align: center;
+  box-shadow: 4px 4px 0 var(--accent);
+}
+
+.level-badge span {
+  color: var(--hint);
+  font-size: 0.65rem;
+}
+
+.level-badge strong {
+  color: var(--accent);
+  font-size: 2.2rem;
+  line-height: 1;
+}
+
+.xp-total {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.xp-total strong {
+  color: var(--text);
+  font-family: "VT323", monospace;
+  font-size: clamp(3rem, 10vw, 5rem);
+  font-weight: 400;
+  line-height: 0.85;
+}
+
+.level-progress-section {
+  padding: 1.5rem;
+  border: 1px solid var(--border);
+  background: var(--btn-bg);
+}
+
+.progress-labels,
+.progress-details {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+}
+
+.progress-labels {
+  margin-bottom: 0.75rem;
+  color: var(--hint);
+}
+
+.xp-progress-track {
+  height: 30px;
+  padding: 4px;
+  border: 1px solid var(--border);
+  background: var(--lcd-bg);
+  overflow: hidden;
+}
+
+.xp-progress-fill {
+  height: 100%;
+  min-width: 0;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--accent) 0,
+    var(--accent) 18px,
+    var(--accent-hover) 18px,
+    var(--accent-hover) 22px
+  );
+  transition: width 0.5s ease;
+}
+
+.progress-details {
+  margin-top: 0.75rem;
+  align-items: center;
+}
+
+.progress-details span {
+  color: var(--hint);
+  text-align: right;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.stat-tile {
+  min-height: 130px;
+  border: 1px solid var(--border);
+  background: var(--btn-bg);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.stat-tile strong {
+  color: var(--accent);
+  font-family: "VT323", monospace;
+  font-size: 3.5rem;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.stats-message {
+  padding: 2rem;
+  text-align: center;
+  border: 1px solid var(--border);
+  background: var(--btn-bg);
+}
+
+.stats-error {
+  color: var(--accent);
+}
+
+@media (max-width: 760px) {
+  .header {
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .logo-row h1 {
+    display: none;
+  }
+
+  .header-actions {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .header-actions button,
+  .header-actions .theme-toggle {
+    font-size: 0.65rem;
+    padding: 0.5rem;
+  }
+
+  .stats-card {
+    padding: 1.25rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .progress-details {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .progress-details span {
+    text-align: left;
+  }
 }
