@@ -12,9 +12,15 @@ export default function Header({ dark, setDark }) {
         <h1>Take a Break</h1>
       </div>
       <button
+        onClick={() => navigate("/stats")}
+        style={{ width: "fit-content", marginLeft: "auto"}}
+      >
+        Stats
+      </button>
+      <button
         className="btn-accent"
         onClick={() => navigate("/addchallenge")}
-        style={{ width: "fit-content", margin: "-1rem 1rem 0 auto" }}
+        style={{ width: "fit-content"}}
       >
         Add Challenge
       </button>
