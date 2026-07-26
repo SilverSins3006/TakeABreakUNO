@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
+import completionSound from "../assets/challenge-complete.mp3";
 
 // When the timer reaches zero
 // if it not, it will display "Not Break Time"
@@ -17,6 +18,13 @@ function Status({
   const { user } = useAuth0();
   const userId = propUserId ?? user?.sub;
   const apiBaseUrl = import.meta.env.VITE_API_URL || "";
+  const playCompletionSound = () => {
+    const audio = new Audio(completionSound);
+    audio.volume = 0.6;
+    audio.play().catch((error) => {
+      console.warn("ERRROR SOUND", error);
+    });
+  };
 
   useEffect(() => {
     if (!isBreakTime) return;
@@ -95,6 +103,7 @@ function Status({
       setCompletedXpReward(currentChallenge?.xp_reward || 0);
       setChallengeCompleted(true);
       setCurrentChallenge(null);
+      playCompletionSound();
     } catch (error) {
       console.error("Error completing challenge:", error);
     }
