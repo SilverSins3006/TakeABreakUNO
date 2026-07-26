@@ -124,6 +124,27 @@ export default function Settings({
     if (onSave) onSave();
   };
 
+  const categoryOptions = [
+  "Scavenger Hunt",
+  "Brain Teaser",
+  "Get Outside",
+  "Exercise",
+  "Stretch",
+  "Chores",
+];
+
+const handleCategoryChange = (category) => {
+  setCategories((currentCategories) => {
+    if (currentCategories.includes(category)) {
+      return currentCategories.filter(
+        (currentCategory) => currentCategory !== category,
+      );
+    }
+
+    return [...currentCategories, category];
+  });
+};
+
   const content = (
     <form className="card" onSubmit={(e) => handleSave(e)}>
       <h2 style={{ color: "var(--accent)" }}>Preferences</h2>
@@ -164,31 +185,27 @@ export default function Settings({
 
       {/* Handling multiple selection for challenge categories */}
       <div>
-        <label htmlFor="categories">Challenge Categories</label>
+  <label>Challenge Categories</label>
 
-        <select
-          className="select"
-          id="categories"
-          name="categories"
-          multiple
-          value={categories}
-          onChange={(e) => {
-            const selectedCategories = Array.from(
-              e.target.selectedOptions,
-              (option) => option.value,
-            );
-
-            setCategories(selectedCategories);
-          }}
-        >
-          <option value="hunt">Scavenger Hunt</option>
-          <option value="brain">Brain Teaser</option>
-          <option value="outside">Get Outside</option>
-          <option value="exercise">Exercise</option>
-          <option value="stretch">Stretch</option>
-          <option value="chores">Chores</option>
-        </select>
-      </div>
+  {categoryOptions.map((category) => (
+    <label
+      key={category}
+      style={{
+        display: "block",
+        color: "var(--accent)",
+        marginTop: "0.5rem",
+      }}
+    >
+      <input
+        type="checkbox"
+        checked={categories.includes(category)}
+        onChange={() => handleCategoryChange(category)}
+      />{" "}
+      {category}
+    </label>
+  ))}
+</div>
+        
 
       <div className="button-row">
         <button type="submit" className="btn-accent">
