@@ -216,7 +216,7 @@ function App() {
             sessionLength={sessionLength}
             setSeconds={setSeconds}
             setSessionLength={setSessionLength}
-            setIsRunning={setIsRunning}
+            isRunning={isRunning}
             challengeDifficulty={challengeDifficulty}
             setChallengeDifficulty={setChallengeDifficulty}
             challengeCategories={challengeCategories}

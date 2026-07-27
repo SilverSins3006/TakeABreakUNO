@@ -34,7 +34,7 @@ export default function Settings({
   sessionLength,
   setSeconds,
   setSessionLength,
-  setIsRunning,
+  isRunning,
   challengeDifficulty = "medium",
   setChallengeDifficulty,
   challengeCategories = [],
@@ -115,9 +115,10 @@ export default function Settings({
   const handleSave = (e) => {
     e.preventDefault();
     const nextSeconds = sessionTime * 60;
-    //setSeconds(nextSeconds);
     setSessionLength(nextSeconds);
-    // setIsRunning?.(false);
+    if (!isRunning) {
+      setSeconds(nextSeconds);
+    }
     setChallengeDifficulty?.(difficulty);
     setChallengeCategories?.(categories);
     syncPreferencesToDB();
