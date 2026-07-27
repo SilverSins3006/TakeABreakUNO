@@ -115,9 +115,9 @@ export default function Settings({
   const handleSave = (e) => {
     e.preventDefault();
     const nextSeconds = sessionTime * 60;
-    setSeconds(nextSeconds);
+    //setSeconds(nextSeconds);
     setSessionLength(nextSeconds);
-    setIsRunning?.(false);
+    // setIsRunning?.(false);
     setChallengeDifficulty?.(difficulty);
     setChallengeCategories?.(categories);
     syncPreferencesToDB();
