@@ -18,6 +18,7 @@ import Stats from "./pages/Stats";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import { useAuth0 } from "@auth0/auth0-react";
+import { normalizeCategories } from "./utils/categories";
 
 /**
  * @brief Custom wrapper to protect routes from unauthenticated users.
@@ -84,7 +85,9 @@ function App() {
           setSessionLength(data.user.session_length_minutes ?? 1800);
           setSeconds(data.user.session_length_minutes ?? 1800);
           setChallengeDifficulty(data.user.challenge_difficulty ?? "medium");
-          setChallengeCategories(data.user.preferred_challenge_types ?? []);
+          setChallengeCategories(
+            normalizeCategories(data.user.preferred_challenge_types),
+          );
         }
       } catch (err) {
         console.error("Failed to sync Auth0 user to backend:", err);
@@ -167,13 +170,13 @@ function App() {
               </ProtectedRoute>
             }
           />
-          
+
           <Route
             path="/stats"
             element={
               <ProtectedRoute>
                 <Stats />
-                </ProtectedRoute>
+              </ProtectedRoute>
             }
           />
 
@@ -197,7 +200,10 @@ function App() {
             }
           />
 
-          <Route path="/addchallenge" element={<AddChallenge userId={user?.sub} />} />
+          <Route
+            path="/addchallenge"
+            element={<AddChallenge userId={user?.sub} />}
+          />
 
           <Route path="*" element={<Navigate to="/account" replace />} />
         </Routes>
@@ -210,7 +216,7 @@ function App() {
             sessionLength={sessionLength}
             setSeconds={setSeconds}
             setSessionLength={setSessionLength}
-            setIsRunning={setIsRunning}
+            isRunning={isRunning}
             challengeDifficulty={challengeDifficulty}
             setChallengeDifficulty={setChallengeDifficulty}
             challengeCategories={challengeCategories}

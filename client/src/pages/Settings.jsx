@@ -34,7 +34,7 @@ export default function Settings({
   sessionLength,
   setSeconds,
   setSessionLength,
-  setIsRunning,
+  isRunning,
   challengeDifficulty = "medium",
   setChallengeDifficulty,
   challengeCategories = [],
@@ -115,9 +115,10 @@ export default function Settings({
   const handleSave = (e) => {
     e.preventDefault();
     const nextSeconds = sessionTime * 60;
-    setSeconds(nextSeconds);
     setSessionLength(nextSeconds);
-    setIsRunning?.(false);
+    if (!isRunning) {
+      setSeconds(nextSeconds);
+    }
     setChallengeDifficulty?.(difficulty);
     setChallengeCategories?.(categories);
     syncPreferencesToDB();
@@ -125,25 +126,25 @@ export default function Settings({
   };
 
   const categoryOptions = [
-  "Scavenger Hunt",
-  "Brain Teaser",
-  "Get Outside",
-  "Exercise",
-  "Stretch",
-  "Chores",
-];
+    "Scavenger Hunt",
+    "Brain Teaser",
+    "Get Outside",
+    "Exercise",
+    "Stretch",
+    "Chores",
+  ];
 
-const handleCategoryChange = (category) => {
-  setCategories((currentCategories) => {
-    if (currentCategories.includes(category)) {
-      return currentCategories.filter(
-        (currentCategory) => currentCategory !== category,
-      );
-    }
+  const handleCategoryChange = (category) => {
+    setCategories((currentCategories) => {
+      if (currentCategories.includes(category)) {
+        return currentCategories.filter(
+          (currentCategory) => currentCategory !== category,
+        );
+      }
 
-    return [...currentCategories, category];
-  });
-};
+      return [...currentCategories, category];
+    });
+  };
 
   const content = (
     <form className="card" onSubmit={(e) => handleSave(e)}>
@@ -185,27 +186,26 @@ const handleCategoryChange = (category) => {
 
       {/* Handling multiple selection for challenge categories */}
       <div>
-  <label>Challenge Categories</label>
+        <label>Challenge Categories</label>
 
-  {categoryOptions.map((category) => (
-    <label
-      key={category}
-      style={{
-        display: "block",
-        color: "var(--accent)",
-        marginTop: "0.5rem",
-      }}
-    >
-      <input
-        type="checkbox"
-        checked={categories.includes(category)}
-        onChange={() => handleCategoryChange(category)}
-      />{" "}
-      {category}
-    </label>
-  ))}
-</div>
-        
+        {categoryOptions.map((category) => (
+          <label
+            key={category}
+            style={{
+              display: "block",
+              color: "var(--accent)",
+              marginTop: "0.5rem",
+            }}
+          >
+            <input
+              type="checkbox"
+              checked={categories.includes(category)}
+              onChange={() => handleCategoryChange(category)}
+            />{" "}
+            {category}
+          </label>
+        ))}
+      </div>
 
       <div className="button-row">
         <button type="submit" className="btn-accent">
