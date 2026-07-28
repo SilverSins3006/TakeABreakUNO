@@ -2,7 +2,7 @@
  * @file Main application shell for Take A Break.
  * @brief Configures routing, authentication guards, and global UI state.
  */
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -19,6 +19,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import { useAuth0 } from "@auth0/auth0-react";
 import { normalizeCategories } from "./utils/categories";
+import { getRemainingSeconds } from "./utils/timer";
 
 /**
  * @brief Custom wrapper to protect routes from unauthenticated users.
@@ -55,6 +56,8 @@ function App() {
   const [dark, setDark] = useState(true); // Global theme state
   const [hasConfigured, setHasConfigured] = useState(true);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
+
+  const timerEndRef = useRef(null);
 
   const { isLoading, error, isAuthenticated, user } = useAuth0();
   const apiBaseUrl = import.meta.env.VITE_API_URL || "";
@@ -99,14 +102,29 @@ function App() {
 
   // Timer side-effect logic (moved safely away from early returns)
   useEffect(() => {
-    let interval;
-    if (isRunning && seconds > 0) {
-      interval = setInterval(() => {
-        setSeconds((prev) => prev - 1);
-      }, 1000);
+    if (!isRunning) {
+      timerEndRef.current = null;
+      return;
     }
+
+    timerEndRef.current = Date.now() + seconds * 1000;
+
+    const updateTimer = () => {
+      const remainingSeconds = getRemainingSeconds(timerEndRef.current);
+
+      setSeconds(remainingSeconds);
+
+      if (remainingSeconds === 0) {
+        setIsRunning(false);
+      }
+    };
+
+    updateTimer();
+
+    const interval = setInterval(updateTimer, 250);
+
     return () => clearInterval(interval);
-  }, [isRunning, seconds]);
+  }, [isRunning]);
 
   if (isLoading) {
     return (

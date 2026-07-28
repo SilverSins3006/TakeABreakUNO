@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import completionSound from "../assets/challenge-complete.mp3";
+import breakTimeSound from "../assets/chimes.mp3";
 
 // When the timer reaches zero
 // if it not, it will display "Not Break Time"
@@ -25,9 +26,18 @@ function Status({
       console.warn("ERRROR SOUND", error);
     });
   };
+  const playBreakTimeSound = () => {
+    const audio = new Audio(breakTimeSound);
+    audio.volume = 0.6;
+    audio.play().catch((error) => {
+      console.warn("ERRROR SOUND", error);
+    });
+  };
 
   useEffect(() => {
     if (!isBreakTime) return;
+
+    playBreakTimeSound();
 
     const params = new URLSearchParams();
     if (difficulty) {
