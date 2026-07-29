@@ -1,12 +1,30 @@
+/**
+ * @file Status component. Displays either a "Not Break Time" placeholder
+ * or, once the session timer reaches zero, the user's current challenge
+ * (fetched from the server) along with a button to mark it complete.
+ */
+
 import { useState, useEffect } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import completionSound from "../assets/challenge-complete.mp3";
 import breakTimeSound from "../assets/chimes.mp3";
 
-// When the timer reaches zero
-// if it not, it will display "Not Break Time"
-// else display the current challenge's title and description
-
+/**
+ * Shows the current break status. While it is not break time, renders a
+ * simple placeholder. Once break time starts, fetches a random challenge
+ * matching the given difficulty/categories, plays a chime, and lets the
+ * user mark the challenge complete for XP.
+ * @param {Object} props
+ * @param {string} [props.userId] - Explicit user id override. Falls back
+ * to the authenticated Auth0 user's `sub` claim when not provided.
+ * @param {boolean} props.isBreakTime - Whether the session timer has
+ * reached zero and a break is currently active.
+ * @param {string} [props.difficulty] - Preferred challenge difficulty,
+ * passed as a query param when fetching a random challenge.
+ * @param {string[]} [props.categories=[]] - Preferred challenge
+ * categories. One is picked at random and passed as a query param.
+ * @returns {JSX.Element} The rendered status panel.
+ */
 function Status({
   userId: propUserId,
   isBreakTime,
@@ -19,6 +37,11 @@ function Status({
   const { user } = useAuth0();
   const userId = propUserId ?? user?.sub;
   const apiBaseUrl = import.meta.env.VITE_API_URL || "";
+  /**
+   * Plays the "challenge complete" chime at a fixed volume. Playback
+   * failures (e.g. blocked autoplay) are logged rather than thrown.
+   * @returns {void}
+   */
   const playCompletionSound = () => {
     const audio = new Audio(completionSound);
     audio.volume = 0.6;
@@ -26,6 +49,11 @@ function Status({
       console.warn("ERRROR SOUND", error);
     });
   };
+  /**
+   * Plays the "break time started" chime at a fixed volume. Playback
+   * failures (e.g. blocked autoplay) are logged rather than thrown.
+   * @returns {void}
+   */
   const playBreakTimeSound = () => {
     const audio = new Audio(breakTimeSound);
     audio.volume = 0.6;
@@ -34,6 +62,12 @@ function Status({
     });
   };
 
+  /**
+   * When break time starts, plays the chime and fetches a random
+   * challenge matching the current difficulty/categories from the
+   * server. Aborts the in-flight request on cleanup (e.g. if break time
+   * ends or props change before the fetch resolves).
+   */
   useEffect(() => {
     if (!isBreakTime) return;
 
@@ -79,6 +113,13 @@ function Status({
     return () => ac.abort();
   }, [isBreakTime, difficulty, categories]);
 
+  /**
+   * Marks the current challenge as complete: fetches the user's latest
+   * preferences, submits updated XP and completed-challenge counts to
+   * the server, updates local state to show the XP reward, and plays
+   * the completion sound. Errors are logged and otherwise swallowed.
+   * @returns {Promise<void>}
+   */
   const handleCompleteChallenge = async () => {
     try {
       const userResponse = await fetch(

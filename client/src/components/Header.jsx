@@ -1,7 +1,22 @@
+/**
+ * @file Header component. Renders the app logo/title, navigation buttons
+ * to the Stats and Add Challenge pages, and the theme toggle.
+ */
+
 import takeABreakLogo from "../assets/takeabreak.svg";
 import ThemeToggle from "./ThemeToggle";
 import { useNavigate } from "react-router-dom";
 
+/**
+ * Top navigation bar for the app. Combines branding, page navigation,
+ * and the light/dark mode toggle.
+ * @param {Object} props
+ * @param {boolean} props.dark - Whether dark mode is currently active.
+ * Passed through to ThemeToggle.
+ * @param {Function} props.setDark - Setter used to toggle dark mode.
+ * Passed through to ThemeToggle.
+ * @returns {JSX.Element} The rendered header.
+ */
 export default function Header({ dark, setDark }) {
   const navigate = useNavigate();
 

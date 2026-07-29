@@ -329,6 +329,7 @@ button:active {
   text-align: center;
   border-top: 2px solid var(--accent);
   margin-top: auto;
+  background: var(--bg);
 }
 
 .uno-logo {

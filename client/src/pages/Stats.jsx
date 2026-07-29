@@ -1,9 +1,22 @@
+/**
+ * @file Stats page. Shows the authenticated user's total XP, computed
+ * level, and progress toward the next level, along with a count of
+ * completed challenges.
+ */
+
 import { useEffect, useMemo, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate } from "react-router-dom";
 
+/** @type {number} XP required to advance one level. */
 const XP_PER_LEVEL = 100;
 
+/**
+ * Displays the current user's XP, level, and challenge completion stats,
+ * fetched from the backend. Derives level and progress-bar values from
+ * the raw XP total.
+ * @returns {JSX.Element} The rendered stats page.
+ */
 export default function Stats() {
   const { user } = useAuth0();
   const navigate = useNavigate();
@@ -18,11 +31,20 @@ export default function Stats() {
 
   const apiBaseUrl = import.meta.env.VITE_API_URL || "";
 
+  /**
+   * Loads the user's XP and completed-challenge count from the backend
+   * once the Auth0 user id is available. Aborts the in-flight request
+   * on cleanup (e.g. if the component unmounts before it resolves).
+   */
   useEffect(() => {
     if (!user?.sub) return;
 
     const controller = new AbortController();
 
+    /**
+     * Fetches the current user's preferences/stats and updates state.
+     * @returns {Promise<void>}
+     */
     const loadStats = async () => {
       try {
         setIsLoading(true);
@@ -64,6 +86,11 @@ export default function Stats() {
     return () => controller.abort();
   }, [apiBaseUrl, user?.sub]);
 
+  /**
+   * Derives level, progress, and remaining-XP figures from the raw XP
+   * total. Level is 1-indexed (0 XP = level 1); progress is a percentage
+   * of the current level's XP bar.
+   */
   const levelStats = useMemo(() => {
     const level = Math.floor(stats.xp / XP_PER_LEVEL) + 1;
     const xpIntoLevel = stats.xp % XP_PER_LEVEL;

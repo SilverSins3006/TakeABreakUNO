@@ -1,3 +1,9 @@
+/**
+ * @file Tests for the Timer component and its getRemainingSeconds helper.
+ * Covers MM:SS / H:MM:SS formatting edge cases and countdown behavior
+ * against a mocked system clock.
+ */
+
 import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
 import Timer from "./Timer";

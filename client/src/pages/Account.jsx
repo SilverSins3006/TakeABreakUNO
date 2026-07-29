@@ -1,12 +1,27 @@
+/**
+ * @file Account page. Landing page for unauthenticated users, offering
+ * Auth0 log in / sign up. Redirects straight to the dashboard if the
+ * user is already authenticated.
+ */
+
 import { useEffect } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useNavigate } from 'react-router-dom';
 
+/**
+ * Auth0-backed login/signup landing page. Shows a loading state while
+ * Auth0 determines auth status, redirects authenticated users to
+ * /dashboard, and otherwise renders Log In / Sign Up buttons.
+ * @returns {JSX.Element} The rendered account page.
+ */
 export default function Account() {
   const { isAuthenticated, loginWithRedirect, isLoading } = useAuth0();
   const navigate = useNavigate();
 
-  // If the user lands here but is already logged in, bounce them straight to the dashboard
+  /**
+   * Redirects to /dashboard once Auth0 confirms the user is already
+   * authenticated, so logged-in users don't see the login screen.
+   */
   useEffect(() => {
     if (!isLoading && isAuthenticated) {
       navigate('/dashboard');

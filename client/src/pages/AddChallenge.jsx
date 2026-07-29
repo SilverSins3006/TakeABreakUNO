@@ -1,7 +1,22 @@
+/**
+ * @file AddChallenge page. Form for authenticated users to submit a new
+ * challenge (title, description, difficulty, and type) to the backend.
+ */
+
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 
+/**
+ * Form page for creating a new challenge. Redirects unauthenticated
+ * users to /account and, once submitted, posts the challenge to the
+ * backend and clears the form on success.
+ * @param {Object} props
+ * @param {string} [props.userId] - Explicit user id override. Falls back
+ * to the authenticated Auth0 user's `sub` claim when not provided.
+ * @returns {JSX.Element|null} The rendered form, or null while an
+ * unauthenticated user is being redirected.
+ */
 function AddChallenge({ userId: propUserId }) {
   const navigate = useNavigate();
   const { user, isAuthenticated, isLoading } = useAuth0();
@@ -14,6 +29,10 @@ function AddChallenge({ userId: propUserId }) {
 
   const apiBaseUrl = import.meta.env.VITE_API_URL || "";
 
+  /**
+   * Redirects unauthenticated users to /account, replacing the current
+   * history entry so back navigation doesn't return to this form.
+   */
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
       navigate("/account", { replace: true });
@@ -28,6 +47,11 @@ function AddChallenge({ userId: propUserId }) {
     return null;
   }
 
+  /**
+   * Builds the challenge payload from form state and submits it to the
+   * backend.
+   * @param {Event} e - The form submission event.
+   */
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -45,6 +69,10 @@ function AddChallenge({ userId: propUserId }) {
     addChallengeToDatabase(newChallenge);
   };
 
+  /**
+   * Resets all form fields back to their default values.
+   * @returns {void}
+   */
   const clearForm = () => {
     setDifficulty("Easy");
     setType("Exercise");
@@ -52,6 +80,13 @@ function AddChallenge({ userId: propUserId }) {
     setDescription("");
   };
 
+  /**
+   * Posts a new challenge to the backend. Shows a success alert and
+   * clears the form on success, or an error alert (using any field-level
+   * validation messages the server returns) on failure.
+   * @param {Object} challenge - The challenge payload to submit.
+   * @returns {Promise<void>}
+   */
   const addChallengeToDatabase = async (challenge) => {
     let errorMessage = "";
     try {

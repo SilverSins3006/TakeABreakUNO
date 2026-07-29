@@ -62,7 +62,18 @@ function App() {
   const { isLoading, error, isAuthenticated, user } = useAuth0();
   const apiBaseUrl = import.meta.env.VITE_API_URL || "";
 
+  /**
+   * Syncs the authenticated Auth0 user to the backend and loads their
+   * saved preferences (session length, challenge difficulty, and
+   * categories) into app state. Runs whenever auth status or the user
+   * changes.
+   */
   useEffect(() => {
+    /**
+     * Upserts the current user in the backend, then fetches and applies
+     * their saved preferences. No-ops if not authenticated.
+     * @returns {Promise<void>}
+     */
     const syncUserToDatabase = async () => {
       if (!isAuthenticated || !user?.sub) return;
 
@@ -101,6 +112,13 @@ function App() {
   }, [isAuthenticated, user]);
 
   // Timer side-effect logic (moved safely away from early returns)
+  /**
+   * Drives the countdown while isRunning is true. Computes an absolute
+   * end timestamp once, then polls every 250ms to derive the remaining
+   * seconds from wall-clock time (rather than decrementing a counter),
+   * so the timer stays accurate even if the tab is throttled in the
+   * background. Stops itself once the remaining time hits zero.
+   */
   useEffect(() => {
     if (!isRunning) {
       timerEndRef.current = null;
