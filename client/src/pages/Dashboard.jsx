@@ -30,7 +30,6 @@ import Status from "../components/Status";
 function Dashboard({
   seconds,
   isRunning,
-
   setIsRunning,
   setSeconds,
   sessionLength,

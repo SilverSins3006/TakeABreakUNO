@@ -34,6 +34,7 @@ function Status({
   const [currentChallenge, setCurrentChallenge] = useState(null);
   const [challengeCompleted, setChallengeCompleted] = useState(false);
   const [completedXpReward, setCompletedXpReward] = useState(0);
+  const [challengeError, setChallengeError] = useState(false);
   const { user } = useAuth0();
   const userId = propUserId ?? user?.sub;
   const apiBaseUrl = import.meta.env.VITE_API_URL || "";
@@ -63,6 +64,51 @@ function Status({
   };
 
   /**
+   * Builds the /api/challenges/random request URL for the current
+   * difficulty/categories, fetches a challenge, and updates state.
+   * Shared by the break-time effect and the manual retry button so
+   * there's one place that defines "how a challenge is fetched."
+   * @param {AbortSignal} [signal] - Optional abort signal, used by the
+   * effect so an in-flight request can be cancelled on cleanup. The
+   * manual retry doesn't need cancellation, so it's omitted there.
+   * @returns {Promise<void>}
+   */
+  const fetchChallenge = async (signal) => {
+    const params = new URLSearchParams();
+    if (difficulty) {
+      params.set("difficulty", difficulty);
+    }
+    if (categories.length > 0) {
+      const randomIndex = Math.floor(Math.random() * categories.length);
+      params.set("category", categories[randomIndex]);
+    }
+    const query = params.toString();
+    const challengeUrl = `/api/challenges/random${query ? `?${query}` : ""}`;
+
+    setChallengeError(false);
+
+    try {
+      const response = await fetch(challengeUrl, signal ? { signal } : undefined);
+      if (!response.ok) {
+        console.error("Failed to fetch challenge, status:", response.status);
+        setCurrentChallenge(null);
+        setChallengeError(true);
+        return;
+      }
+      const data = await response.json();
+      setChallengeCompleted(false);
+      setCompletedXpReward(0);
+      setCurrentChallenge(data);
+      console.log("Fetched challenge:", data);
+    } catch (error) {
+      if (error.name !== "AbortError") {
+        console.error("Error fetching current challenge:", error);
+        setChallengeError(true);
+      }
+    }
+  };
+
+  /**
    * When break time starts, plays the chime and fetches a random
    * challenge matching the current difficulty/categories from the
    * server. Aborts the in-flight request on cleanup (e.g. if break time
@@ -73,43 +119,8 @@ function Status({
 
     playBreakTimeSound();
 
-    const params = new URLSearchParams();
-    if (difficulty) {
-      params.set("difficulty", difficulty);
-    }
-
-    if (categories.length > 0) {
-      const randomIndex = Math.floor(Math.random() * categories.length);
-      params.set("category", categories[randomIndex]);
-    }
-
-    const query = params.toString();
-    const challengeUrl = `/api/challenges/random${query ? `?${query}` : ""}`;
-
-    // Fetch the current challenge from the server.
-    // Use a relative path so the dev proxy or same-origin deployment works.
     const ac = new AbortController();
-    (async () => {
-      try {
-        const response = await fetch(challengeUrl, {
-          signal: ac.signal,
-        });
-        if (!response.ok) {
-          console.error("Failed to fetch challenge, status:", response.status);
-          setCurrentChallenge(null);
-          return;
-        }
-        const data = await response.json();
-        setChallengeCompleted(false);
-        setCompletedXpReward(0);
-        setCurrentChallenge(data);
-        console.log("Fetched challenge:", data);
-      } catch (error) {
-        if (error.name !== "AbortError") {
-          console.error("Error fetching current challenge:", error);
-        }
-      }
-    })();
+    fetchChallenge(ac.signal);
     return () => ac.abort();
   }, [isBreakTime, difficulty, categories]);
 
@@ -171,6 +182,18 @@ function Status({
           <br />
           <button className="btn-accent" onClick={handleCompleteChallenge}>
             complete challenge +{currentChallenge.xp_reward}XP
+          </button>
+        </>
+      ) : challengeError ? (
+        <>
+          <h2>Couldn't load a challenge</h2>
+          <p>Check your connection and try again.</p>
+          <br />
+          <button
+            className="btn-accent"
+            onClick={() => fetchChallenge()}
+          >
+            Try Again
           </button>
         </>
       ) : (
