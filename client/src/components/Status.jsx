@@ -9,6 +9,13 @@ import { useAuth0 } from "@auth0/auth0-react";
 import completionSound from "../assets/challenge-complete.mp3";
 import breakTimeSound from "../assets/chimes.mp3";
 
+// Stable reference used as the default for the categories prop. A plain
+// `categories = []` default creates a brand-new array on every render,
+// which would make the fetch effect below think its dependency changed
+// on every render (even when nothing meaningful did), causing it to
+// refetch in a loop whenever no categories prop is passed.
+const NO_CATEGORIES = [];
+
 /**
  * Shows the current break status. While it is not break time, renders a
  * simple placeholder. Once break time starts, fetches a random challenge
@@ -21,15 +28,16 @@ import breakTimeSound from "../assets/chimes.mp3";
  * reached zero and a break is currently active.
  * @param {string} [props.difficulty] - Preferred challenge difficulty,
  * passed as a query param when fetching a random challenge.
- * @param {string[]} [props.categories=[]] - Preferred challenge
+ * @param {string[]} [props.categories] - Preferred challenge
  * categories. One is picked at random and passed as a query param.
+ * Defaults to a shared stable empty array when omitted.
  * @returns {JSX.Element} The rendered status panel.
  */
 function Status({
   userId: propUserId,
   isBreakTime,
   difficulty,
-  categories = [],
+  categories = NO_CATEGORIES,
 }) {
   const [currentChallenge, setCurrentChallenge] = useState(null);
   const [challengeCompleted, setChallengeCompleted] = useState(false);

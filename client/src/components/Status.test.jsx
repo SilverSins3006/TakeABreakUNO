@@ -5,7 +5,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import Status from "./Status";
 
 vi.mock("@auth0/auth0-react", () => ({
@@ -87,5 +87,54 @@ describe("Status challenge fetching", () => {
       await screen.findByText("Do 10 jumping jacks"),
     ).toBeInTheDocument();
     expect(screen.getByText("Get your heart rate up")).toBeInTheDocument();
+  });
+
+  it("shows an error message and a retry button when the fetch fails", async () => {
+    global.fetch = vi.fn().mockResolvedValue({ ok: false, status: 500 });
+
+    render(<Status isBreakTime={true} difficulty="Easy" />);
+
+    expect(
+      await screen.findByText("Couldn't load a challenge"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Try Again" }),
+    ).toBeInTheDocument();
+  });
+
+  it("shows an error message when the request throws", async () => {
+    global.fetch = vi.fn().mockRejectedValue(new Error("Network down"));
+
+    render(<Status isBreakTime={true} difficulty="Easy" />);
+
+    expect(
+      await screen.findByText("Couldn't load a challenge"),
+    ).toBeInTheDocument();
+  });
+
+  it("retries the fetch and shows the challenge when Try Again succeeds", async () => {
+    global.fetch = vi
+      .fn()
+      .mockResolvedValueOnce({ ok: false, status: 500 })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          title: "Do 10 jumping jacks",
+          description: "Get your heart rate up",
+          xp_reward: 15,
+        }),
+      });
+
+    render(<Status isBreakTime={true} difficulty="Easy" />);
+
+    const retryButton = await screen.findByRole("button", {
+      name: "Try Again",
+    });
+    fireEvent.click(retryButton);
+
+    expect(
+      await screen.findByText("Do 10 jumping jacks"),
+    ).toBeInTheDocument();
+    expect(global.fetch).toHaveBeenCalledTimes(2);
   });
 });
