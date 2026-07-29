@@ -1,3 +1,9 @@
+/**
+ * @file Category normalization utilities. Maps loosely-formatted category
+ * input (different casing, hyphens vs. spaces, short aliases) to the
+ * canonical category labels used elsewhere in the app.
+ */
+
 const categoryMap = {
   exercise: "Exercise",
   stretch: "Stretch",

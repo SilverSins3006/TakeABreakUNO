@@ -12,7 +12,6 @@ import {
 import Account from "./pages/Account";
 import Settings from "./pages/Settings";
 import Dashboard from "./pages/Dashboard";
-import Insights from "./pages/Insights";
 import AddChallenge from "./pages/AddChallenge";
 import Stats from "./pages/Stats";
 import Header from "./components/Header";
@@ -54,7 +53,12 @@ function App() {
   const [challengeDifficulty, setChallengeDifficulty] = useState("medium");
   const [challengeCategories, setChallengeCategories] = useState([]);
   const [dark, setDark] = useState(true); // Global theme state
-  const [hasConfigured, setHasConfigured] = useState(true);
+  // hasConfigured starts as null ("unknown") until we've checked the backend
+  // for saved preferences. Starting it at true made the "needs setup"
+  // redirect below unreachable, since every session began already
+  // "configured". null lets the "/" route wait for that check instead of
+  // guessing.
+  const [hasConfigured, setHasConfigured] = useState(null);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
 
   const timerEndRef = useRef(null);
@@ -62,7 +66,18 @@ function App() {
   const { isLoading, error, isAuthenticated, user } = useAuth0();
   const apiBaseUrl = import.meta.env.VITE_API_URL || "";
 
+  /**
+   * Syncs the authenticated Auth0 user to the backend and loads their
+   * saved preferences (session length, challenge difficulty, and
+   * categories) into app state. Runs whenever auth status or the user
+   * changes.
+   */
   useEffect(() => {
+    /**
+     * Upserts the current user in the backend, then fetches and applies
+     * their saved preferences. No-ops if not authenticated.
+     * @returns {Promise<void>}
+     */
     const syncUserToDatabase = async () => {
       if (!isAuthenticated || !user?.sub) return;
 
@@ -85,15 +100,29 @@ function App() {
         if (data.user) {
           // set saved preferences here
           console.log("Fetched user preferences:", data.user);
+          // NOTE: despite the "_minutes" name, this field actually holds
+          // seconds (see Settings.jsx: sessionLengthMinutes is set to
+          // sessionTime * 60 before saving). Consumed here as seconds to
+          // match. Worth renaming on the backend at some point to avoid
+          // confusion, but left as-is here to match the existing API
+          // contract.
           setSessionLength(data.user.session_length_minutes ?? 1800);
           setSeconds(data.user.session_length_minutes ?? 1800);
           setChallengeDifficulty(data.user.challenge_difficulty ?? "medium");
           setChallengeCategories(
             normalizeCategories(data.user.preferred_challenge_types),
           );
+          // A saved session length is our signal that this user has been
+          // through Settings before.
+          setHasConfigured(Boolean(data.user.session_length_minutes));
+        } else {
+          setHasConfigured(false);
         }
       } catch (err) {
         console.error("Failed to sync Auth0 user to backend:", err);
+        // Fail open rather than leaving hasConfigured stuck at null, which
+        // would trap the user on a permanent loading state.
+        setHasConfigured(true);
       }
     };
 
@@ -101,6 +130,13 @@ function App() {
   }, [isAuthenticated, user]);
 
   // Timer side-effect logic (moved safely away from early returns)
+  /**
+   * Drives the countdown while isRunning is true. Computes an absolute
+   * end timestamp once, then polls every 250ms to derive the remaining
+   * seconds from wall-clock time (rather than decrementing a counter),
+   * so the timer stays accurate even if the tab is throttled in the
+   * background. Stops itself once the remaining time hits zero.
+   */
   useEffect(() => {
     if (!isRunning) {
       timerEndRef.current = null;
@@ -154,16 +190,25 @@ function App() {
           <Route
             path="/"
             element={
-              !hasConfigured ? (
-                <Navigate to="/settings" replace />
-              ) : (
+              !isAuthenticated ? (
+                <Navigate to="/account" replace />
+              ) : hasConfigured === null ? (
+                <div
+                  className="container"
+                  style={{ padding: "2rem", textAlign: "center" }}
+                >
+                  Loading your preferences...
+                </div>
+              ) : hasConfigured ? (
                 <Navigate to="/dashboard" replace />
+              ) : (
+                <Navigate to="/settings" replace />
               )
             }
           />
 
           {/* Public authentication landing page */}
-          <Route path="/account" element={<Account dark={dark} />} />
+          <Route path="/account" element={<Account />} />
 
           {/* Protected Routes - Wrapping these ensures users must log in first */}
           <Route
@@ -176,15 +221,6 @@ function App() {
                   setSessionLength={setSessionLength}
                   userId={user?.sub}
                 />
-              </ProtectedRoute>
-            }
-          />
-
-          <Route
-            path="/insights"
-            element={
-              <ProtectedRoute>
-                <Insights dark={dark} />
               </ProtectedRoute>
             }
           />
@@ -203,9 +239,7 @@ function App() {
             element={
               <ProtectedRoute>
                 <Dashboard
-                  dark={dark}
                   seconds={seconds}
-                  time={seconds}
                   isRunning={isRunning}
                   setIsRunning={setIsRunning}
                   setSeconds={setSeconds}
@@ -220,7 +254,11 @@ function App() {
 
           <Route
             path="/addchallenge"
-            element={<AddChallenge userId={user?.sub} />}
+            element={
+              <ProtectedRoute>
+                <AddChallenge userId={user?.sub} />
+              </ProtectedRoute>
+            }
           />
 
           <Route path="*" element={<Navigate to="/account" replace />} />

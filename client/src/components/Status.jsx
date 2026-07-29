@@ -1,24 +1,56 @@
+/**
+ * @file Status component. Displays either a "Not Break Time" placeholder
+ * or, once the session timer reaches zero, the user's current challenge
+ * (fetched from the server) along with a button to mark it complete.
+ */
+
 import { useState, useEffect } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import completionSound from "../assets/challenge-complete.mp3";
 import breakTimeSound from "../assets/chimes.mp3";
 
-// When the timer reaches zero
-// if it not, it will display "Not Break Time"
-// else display the current challenge's title and description
+// Stable reference used as the default for the categories prop. A plain
+// `categories = []` default creates a brand-new array on every render,
+// which would make the fetch effect below think its dependency changed
+// on every render (even when nothing meaningful did), causing it to
+// refetch in a loop whenever no categories prop is passed.
+const NO_CATEGORIES = [];
 
+/**
+ * Shows the current break status. While it is not break time, renders a
+ * simple placeholder. Once break time starts, fetches a random challenge
+ * matching the given difficulty/categories, plays a chime, and lets the
+ * user mark the challenge complete for XP.
+ * @param {Object} props
+ * @param {string} [props.userId] - Explicit user id override. Falls back
+ * to the authenticated Auth0 user's `sub` claim when not provided.
+ * @param {boolean} props.isBreakTime - Whether the session timer has
+ * reached zero and a break is currently active.
+ * @param {string} [props.difficulty] - Preferred challenge difficulty,
+ * passed as a query param when fetching a random challenge.
+ * @param {string[]} [props.categories] - Preferred challenge
+ * categories. One is picked at random and passed as a query param.
+ * Defaults to a shared stable empty array when omitted.
+ * @returns {JSX.Element} The rendered status panel.
+ */
 function Status({
   userId: propUserId,
   isBreakTime,
   difficulty,
-  categories = [],
+  categories = NO_CATEGORIES,
 }) {
   const [currentChallenge, setCurrentChallenge] = useState(null);
   const [challengeCompleted, setChallengeCompleted] = useState(false);
   const [completedXpReward, setCompletedXpReward] = useState(0);
+  const [challengeError, setChallengeError] = useState(false);
   const { user } = useAuth0();
   const userId = propUserId ?? user?.sub;
   const apiBaseUrl = import.meta.env.VITE_API_URL || "";
+  /**
+   * Plays the "challenge complete" chime at a fixed volume. Playback
+   * failures (e.g. blocked autoplay) are logged rather than thrown.
+   * @returns {void}
+   */
   const playCompletionSound = () => {
     const audio = new Audio(completionSound);
     audio.volume = 0.6;
@@ -26,6 +58,11 @@ function Status({
       console.warn("ERRROR SOUND", error);
     });
   };
+  /**
+   * Plays the "break time started" chime at a fixed volume. Playback
+   * failures (e.g. blocked autoplay) are logged rather than thrown.
+   * @returns {void}
+   */
   const playBreakTimeSound = () => {
     const audio = new Audio(breakTimeSound);
     audio.volume = 0.6;
@@ -34,51 +71,74 @@ function Status({
     });
   };
 
+  /**
+   * Builds the /api/challenges/random request URL for the current
+   * difficulty/categories, fetches a challenge, and updates state.
+   * Shared by the break-time effect and the manual retry button so
+   * there's one place that defines "how a challenge is fetched."
+   * @param {AbortSignal} [signal] - Optional abort signal, used by the
+   * effect so an in-flight request can be cancelled on cleanup. The
+   * manual retry doesn't need cancellation, so it's omitted there.
+   * @returns {Promise<void>}
+   */
+  const fetchChallenge = async (signal) => {
+    const params = new URLSearchParams();
+    if (difficulty) {
+      params.set("difficulty", difficulty);
+    }
+    if (categories.length > 0) {
+      const randomIndex = Math.floor(Math.random() * categories.length);
+      params.set("category", categories[randomIndex]);
+    }
+    const query = params.toString();
+    const challengeUrl = `/api/challenges/random${query ? `?${query}` : ""}`;
+
+    setChallengeError(false);
+
+    try {
+      const response = await fetch(challengeUrl, signal ? { signal } : undefined);
+      if (!response.ok) {
+        console.error("Failed to fetch challenge, status:", response.status);
+        setCurrentChallenge(null);
+        setChallengeError(true);
+        return;
+      }
+      const data = await response.json();
+      setChallengeCompleted(false);
+      setCompletedXpReward(0);
+      setCurrentChallenge(data);
+      console.log("Fetched challenge:", data);
+    } catch (error) {
+      if (error.name !== "AbortError") {
+        console.error("Error fetching current challenge:", error);
+        setChallengeError(true);
+      }
+    }
+  };
+
+  /**
+   * When break time starts, plays the chime and fetches a random
+   * challenge matching the current difficulty/categories from the
+   * server. Aborts the in-flight request on cleanup (e.g. if break time
+   * ends or props change before the fetch resolves).
+   */
   useEffect(() => {
     if (!isBreakTime) return;
 
     playBreakTimeSound();
 
-    const params = new URLSearchParams();
-    if (difficulty) {
-      params.set("difficulty", difficulty);
-    }
-
-    if (categories.length > 0) {
-      const randomIndex = Math.floor(Math.random() * categories.length);
-      params.set("category", categories[randomIndex]);
-    }
-
-    const query = params.toString();
-    const challengeUrl = `/api/challenges/random${query ? `?${query}` : ""}`;
-
-    // Fetch the current challenge from the server.
-    // Use a relative path so the dev proxy or same-origin deployment works.
     const ac = new AbortController();
-    (async () => {
-      try {
-        const response = await fetch(challengeUrl, {
-          signal: ac.signal,
-        });
-        if (!response.ok) {
-          console.error("Failed to fetch challenge, status:", response.status);
-          setCurrentChallenge(null);
-          return;
-        }
-        const data = await response.json();
-        setChallengeCompleted(false);
-        setCompletedXpReward(0);
-        setCurrentChallenge(data);
-        console.log("Fetched challenge:", data);
-      } catch (error) {
-        if (error.name !== "AbortError") {
-          console.error("Error fetching current challenge:", error);
-        }
-      }
-    })();
+    fetchChallenge(ac.signal);
     return () => ac.abort();
   }, [isBreakTime, difficulty, categories]);
 
+  /**
+   * Marks the current challenge as complete: fetches the user's latest
+   * preferences, submits updated XP and completed-challenge counts to
+   * the server, updates local state to show the XP reward, and plays
+   * the completion sound. Errors are logged and otherwise swallowed.
+   * @returns {Promise<void>}
+   */
   const handleCompleteChallenge = async () => {
     try {
       const userResponse = await fetch(
@@ -130,6 +190,18 @@ function Status({
           <br />
           <button className="btn-accent" onClick={handleCompleteChallenge}>
             complete challenge +{currentChallenge.xp_reward}XP
+          </button>
+        </>
+      ) : challengeError ? (
+        <>
+          <h2>Couldn't load a challenge</h2>
+          <p>Check your connection and try again.</p>
+          <br />
+          <button
+            className="btn-accent"
+            onClick={() => fetchChallenge()}
+          >
+            Try Again
           </button>
         </>
       ) : (
