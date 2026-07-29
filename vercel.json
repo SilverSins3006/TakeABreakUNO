@@ -5,7 +5,8 @@
   ],
   "routes": [
     { "src": "/api/(.*)", "dest": "server/api/index.js" },
-    { "handle": "filesystem" },
+    { "src": "/assets/(.*)", "dest": "client/assets/$1" },
+    { "src": "/(favicon\\.ico|robots\\.txt|manifest\\.json)", "dest": "client/$1" },
     { "src": "/(.*)", "dest": "client/index.html" }
   ]
 }
