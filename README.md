@@ -9,7 +9,6 @@ A web application to encourage taking breaks from screen time.
 - [Tech Stack](#tech-stack)
 - [Getting Started](#getting-started)
 - [Common Commands](#common-commands)
-- [Project Management & Backlog](#-project-management)
 - [Release Notes](#release-notes)
 
 ---
