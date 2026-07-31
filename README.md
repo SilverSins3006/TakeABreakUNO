@@ -145,3 +145,17 @@ Still in progress:
 - The challenge completion counter and XP rewards are not yet functional.
 - The Insights page still needs to be completed.
 - Additional testing and bug fixes are still needed.
+
+### Code Milestone 4
+
+Release Notes:
+
+- Project documentation is now auto-generated with JSDoc and published to a GitHub Pages.
+- Challenge category filtering works correctly on the frontend and backend.
+- Returning users are now routed correctly based on whether they have completed setup.
+- The Settings page category multi-select works as expected.
+- A sound now plays when the timer reaches zero, so users are notified even if the tab is not visible.
+- A sound now plays when a challenge is completed, to reinforce user engagement.
+- A stats and leveling system has been added, showing total XP, current level, progress toward the next level, and challenges completed.
+- A feature to add a new challenge has been added, allowing users to create their own custom challenges.
+- Bugs found during testing have been fixed.
